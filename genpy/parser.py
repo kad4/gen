@@ -16,30 +16,43 @@ def parser(URL):
 		soup = BeautifulSoup(currentPage)
 		# print (currentPage)
 		if soup.rss == None:
-			parseHTML(URL)
+			parseHTML(URL, currentPage, soup)
 		else:
-			parseXML(URL)
+			parseXML(URL, currentPage, soup)
 	except Exception as e:
 		print ('Error parsing',URL)
 		print (e)
 
-def parseHTML(URL):
+def parseHTML(URL, PAGE, SOUP):
+	print ("Parsing HTML")
 	try:
-		currentPage = urlopen(URL).read()
-		soup = BeautifulSoup(currentPage)
+		currentPage = PAGE
+		soup = SOUP
 
-		newItem = soup.findAll("div", id = True)
-		print (newItem)
+		titles = []
+		
+		for link in soup.find_all('a'):
+			titles.append([link.string, link.get('href')])
+			
+		f = open('list.lst', 'wb')
+		print ("written")
+		pickle.dump(titles,f, protocol = pickle.HIGHEST_PROTOCOL)
+
 
 	except Exception as e:
 		print (e)
+		raise
 		
-def parseXML(URL):
+def parseXML(URL, PAGE, SOUP):
+	print ("Parsing XML")
 	try:
 		currentPage = urlopen(URL).read()
 		soup = BeautifulSoup(currentPage, 'xml')
+
+
 	except Exception as e:
 		print (e)
+		raise
 		
 if __name__ == '__main__':
-	parser('http://localhost/genSites/sites/b0news.htm')
+	parser('http://www.ekantipur.com/np/archive/')
