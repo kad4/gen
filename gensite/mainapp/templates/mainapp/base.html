@@ -9,10 +9,8 @@
         Gen
       {% endblock %}
     </title>
-
-		<meta name="generator" content="Bootply"  />
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
+    <meta name="generator" content="Bootply" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<link href="{% static "mainapp/css/bootstrap.min.css" %}"  rel="stylesheet">
 		<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
 		<!--[if lt IE 9]>
@@ -34,7 +32,14 @@
         </div>
         <nav class="collapse navbar-collapse" role="navigation">
           <ul class="nav navbar-nav">
-            <!--  -->
+            <li>
+              <a href="{% url 'about' %}">About</a>
+            </li>
+          </ul>
+          <ul class="nav navbar-right navbar-nav">
+            <li>
+              <a href="{% url 'login' %}">Login</a>
+            </li>
           </ul>
         </nav>
       </div>
@@ -42,10 +47,10 @@
 
     <div id="masthead">  
       <div class="container">
-        <div class="row" style="padding:24px; margin-top:31px; margin-bottom:20px;">
-          <div class="col-md-4">
+        <div class="row">
+          <div class="col-md-12">
             <h1>Gen
-              <p class="lead">News Recommender</p>
+                <p class="lead">News Recommender</p>
             </h1>
           </div>
         </div> 
@@ -54,10 +59,11 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <div class="top-spacer"></div>
+            <div class="top-spacer"> </div>
           </div>
         </div> 
       </div><!-- /cont -->
+      
     </div>
 
     <div class="container">
@@ -79,12 +85,12 @@
       <div class="container">
         <div class="row">
           <div class="col-sm-6">
-            <ul class="list-inline">
+            <!-- <ul class="list-inline">
               <li><i class="icon-facebook icon-2x"></i></li>
               <li><i class="icon-twitter icon-2x"></i></li>
               <li><i class="icon-google-plus icon-2x"></i></li>
               <li><i class="icon-pinterest icon-2x"></i></li>
-            </ul>
+            </ul> -->
           </div>
 
           <div class="col-sm-6">
@@ -93,6 +99,7 @@
         </div>
       </div>
     </footer>
+    
     	<!-- script references -->
 		<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 		<script src="{% static "mainapp/js/bootstrap.min.js" %}"></script>

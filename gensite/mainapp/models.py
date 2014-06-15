@@ -3,11 +3,11 @@ from django.db import models
 # Create your models here.
 
 class member(models.Model):
-	username= models.CharField(max_length=50)
-	password= models.CharField(max_length=50)
-	email= models.CharField(max_length=70)
 	first_name= models.CharField(max_length=50)
 	last_name= models.CharField(max_length=50)
+	email= models.CharField(max_length=70)
+	username= models.CharField(max_length=50)
+	password= models.CharField(max_length=50)
 	last_access= models.DateTimeField()
 
 	def __str__(self):
