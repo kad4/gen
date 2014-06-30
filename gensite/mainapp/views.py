@@ -1,19 +1,33 @@
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect
 from django.utils import timezone
 from django import forms
-from mainapp.models import post,member
+
+from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
+
+from django.core.urlresolvers import reverse
+
+from mainapp.models import post,rating
 
 
-# Create your views here.
-class SignupForm(forms.Form):
-	first_name= forms.CharField(max_length=70,widget=forms.TextInput(attrs={'class':'form-control input-xlarge'}))
-	last_name= forms.CharField(max_length=70,widget=forms.TextInput(attrs={'class':'form-control input-xlarge'}))
-	email= forms.EmailField(widget=forms.TextInput(attrs={'class':'form-control input-xlarge'}))
-	username= forms.CharField(max_length=50,widget=forms.TextInput(attrs={'class':'form-control input-xlarge'}))
-	password= forms.CharField(max_length=50, widget=forms.PasswordInput(attrs={'class':'form-control input-xlarge'}))
-	repassword= forms.CharField(max_length=50, widget=forms.PasswordInput(attrs={'class':'form-control input-xlarge'}))
+class SignupForm(forms.ModelForm):
+	class Meta:
+		model= User
+		fields= ['username','email','first_name','last_name','password']
+		widgets = {
+			'username': forms.TextInput(attrs={'class':'form-control input-xlarge'}),
+			'email': forms.TextInput(attrs={'class':'form-control input-xlarge'}),
+			'first_name': forms.TextInput(attrs={'class':'form-control input-xlarge'}),
+			'last_name': forms.TextInput(attrs={'class':'form-control input-xlarge'}),
+			'password': forms.PasswordInput(attrs={'class':'form-control input-xlarge'}),
+		}
 
+	repassword=forms.CharField(max_length=30,widget=forms.PasswordInput(attrs={'class':'form-control input-xlarge'}))
+
+class LoginForm(forms.Form):
+	username=forms.CharField(max_length=30,widget=forms.TextInput(attrs={'class':'form-control input-xlarge'}))	
+	password=forms.CharField(max_length=30,widget=forms.PasswordInput(attrs={'class':'form-control input-xlarge'}))	
 
 def index(request):
 	post_list=post.objects.all()
@@ -22,28 +36,41 @@ def index(request):
 def about(request):
 	return render(request,'mainapp/about.html')
 
-
 def login(request):
+	if(request.method=='POST'):
+		form=LoginForm(request.POST)
+		if(form.is_valid()):
+			user= authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+			print('Welcome')
+	else:
+		form=LoginForm()
+
 	return render(request,'mainapp/login.html')
 
 def signup(request):
-	if request.method == 'POST':
-		form = SignupForm(request.POST)
+	if (request.method== 'POST'):
+		form=SignupForm(request.POST)
 		if (form.is_valid()):
+			username=form.cleaned_data['username']
+			email=form.cleaned_data['email']
+			password=form.cleaned_data['password']
 			first_name=form.cleaned_data['first_name']
 			last_name=form.cleaned_data['last_name']
-			email=form.cleaned_data['email']
-			username=form.cleaned_data['username']
-			password=form.cleaned_data['password']
-			repassword=form.cleaned_data['repassword']
 			
-			if( password==repassword ):
-				new_member=member()
-			
+			user = User.objects.create_user(username, email, password)
+			user.first_name=first_name
+			user.last_name=last_name
+			user.save()
 
+			return render(request,'mainapp/login.html',{'message':'User has been Created'})
 	else:
-		form= SignupForm()
+		form=SignupForm()
 
-	return render(request,'mainapp/signup.html', {
-		'form':form,
-		})
+	return render(request,'mainapp/signup.html',{'form':form})
+
+
+
+def test(request):
+	return render(request,'mainapp/test.html')
+
+

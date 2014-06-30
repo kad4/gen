@@ -1,17 +1,5 @@
 from django.db import models
-
-# Create your models here.
-
-class member(models.Model):
-	first_name= models.CharField(max_length=50)
-	last_name= models.CharField(max_length=50)
-	email= models.CharField(max_length=70)
-	username= models.CharField(max_length=50)
-	password= models.CharField(max_length=50)
-	last_access= models.DateTimeField()
-
-	def __str__(self):
-		return self.username
+from django.contrib.auth.models import User
 
 class post(models.Model):
 	title= models.TextField()
@@ -22,8 +10,8 @@ class post(models.Model):
 		return self.title
 
 class rating(models.Model):
-	user_id= models.ForeignKey(member)
-	post_id= models.ForeignKey(post)
+	user= models.ForeignKey(User)
+	post= models.ForeignKey(post)
 	score= models.PositiveSmallIntegerField()
 
 class site(models.Model):
