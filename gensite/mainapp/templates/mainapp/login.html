@@ -1,43 +1,5 @@
 {% extends "mainapp/base.html" %}
 
 {% block content %}	
-	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
-			{% if message %}
-				<div class="row">
-					<div class="well well-lg">
-						{{message}}
-					</div>
-				</div>
-			{% endif %}
-
-			<h1>Enter your details</h1>
-			<form class="form-horizontal well">
-				<fieldset>
-					<div class="control-group">
-						<label class="control-label" for="username">Username</label>
-						<div class="controls">
-							<input id="username" class="form-control input-xlarge" type="text" />
-						</div>
-					</div>
-
-					<div class="control-group">
-						<label class="control-label" for="password">Password</label>
-						<div class="controls">
-							<input id="password" class="form-control input-xlarge" type="password" />
-						</div>
-					</div>
-
-					<p style="margin-top:10px;">
-						<button class="btn btn-lg btn-primary" type="submit">Login</button>
-					</p>
-
-					<p>
-						<a class="btn" href="{% url 'signup' %}">Click here to signup</a>
-					</p>
-
-				</fieldset>
-			</form>
-		</div>
-	</div>
-{% endblock%}
+	
+{% endblock %}

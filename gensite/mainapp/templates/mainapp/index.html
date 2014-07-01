@@ -2,7 +2,53 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col-sm-12">
+		<div class="col-sm-8">
+			<div class="row">
+				<section>
+			  		<h2>About Gen</h2>
+			  		<div class="hline"></div>
+			      <p>
+			        Gen is a personalized news recommendation system. It collects news that is relevant to the user according to the news articles that he/she has read in the past.
+			      </p>
+			  	</section>
+			    <section>
+			      Login to get started
+			    </section>
+			</div>
 		</div>
-  	</div>
+		<div class="col-sm-4">
+			{% if message %}
+				<div class="row">
+					<div class="well well-lg">
+						{{message}}
+					</div>
+				</div>
+			{% endif %}
+
+			<form class="form-horizontal well" method="post" action="{% url 'index' %}">
+				<fieldset>
+					{% csrf_token %}
+
+					{% for field in form %}
+					<div class="control-group" style="margin-top:15px;">
+						{{ field.errors }}
+						{{ field.label_tag }}
+						<div class="controls">
+							{{ field }}
+						</div>
+					</div>
+					{% endfor %}
+
+					<p style="margin-top:10px;">
+						<button class="btn btn-md btn-theme" type="submit">Login</button>
+					</p>
+
+					<p>
+						<a class="btn" href="{% url 'signup' %}">Not a member?</a>
+					</p>
+
+				</fieldset>
+			</form>
+		</div>
+	</div>
 {% endblock %}

@@ -30,22 +30,15 @@ class LoginForm(forms.Form):
 	password=forms.CharField(max_length=30,widget=forms.PasswordInput(attrs={'class':'form-control input-xlarge'}))	
 
 def index(request):
-	post_list=post.objects.all()
-	return render(request,'mainapp/index.html',{'post_list':post_list})
-
-def about(request):
-	return render(request,'mainapp/about.html')
-
-def login(request):
 	if(request.method=='POST'):
 		form=LoginForm(request.POST)
 		if(form.is_valid()):
 			user= authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-			print('Welcome')
+			return HttpResponse('Arrived you have')
 	else:
 		form=LoginForm()
 
-	return render(request,'mainapp/login.html')
+	return render(request,'mainapp/index.html',{'form':form})	
 
 def signup(request):
 	if (request.method== 'POST'):
@@ -62,15 +55,8 @@ def signup(request):
 			user.last_name=last_name
 			user.save()
 
-			return render(request,'mainapp/login.html',{'message':'User has been Created'})
+			return render(request,'mainapp/index.html',{'message':'User has been Created'})
 	else:
 		form=SignupForm()
 
 	return render(request,'mainapp/signup.html',{'form':form})
-
-
-
-def test(request):
-	return render(request,'mainapp/test.html')
-
-
