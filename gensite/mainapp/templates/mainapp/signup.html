@@ -2,16 +2,12 @@
 
 {% block content %}
 	<div class="row">
-		{% if message %}
-			<div class="row">
-				<div class="well well-lg">
-					{{ message }}
-				</div>
-			</div>
-		{% endif %}
-
 		<div class="col-sm-6">
 			<form class="form-horizontal well" method="post" action="{% url 'signup' %}">
+				{% if message %}
+					<div class="alert alert-info">{{ message }}</div>
+				{% endif %}
+
 				{{ form.non_field_errors }}
 				<fieldset>
 					{% csrf_token %}

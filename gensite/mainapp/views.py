@@ -1,19 +1,15 @@
-from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
-from django.utils import timezone
 from django import forms
+from django.contrib import auth
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 
-from django.contrib.auth import authenticate
-from django.contrib.auth.models import User
-
-from django.core.urlresolvers import reverse
+from django.contrib.auth.decorators import login_required
 
 from mainapp.models import post,rating
 
-
 class SignupForm(forms.ModelForm):
 	class Meta:
-		model= User
+		model= auth.models.User
 		fields= ['username','email','first_name','last_name','password']
 		widgets = {
 			'username': forms.TextInput(attrs={'class':'form-control input-xlarge'}),
@@ -29,16 +25,27 @@ class LoginForm(forms.Form):
 	username=forms.CharField(max_length=30,widget=forms.TextInput(attrs={'class':'form-control input-xlarge'}))	
 	password=forms.CharField(max_length=30,widget=forms.PasswordInput(attrs={'class':'form-control input-xlarge'}))	
 
-def home(request):
+def index(request):
 	if(request.method=='POST'):
 		form=LoginForm(request.POST)
 		if(form.is_valid()):
-			user= authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-			return HttpResponse('Arrived you have')
+			user=auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+			if user is not None:
+				if user.is_active:
+					auth.login(request,user)
+					return redirect('home')
+				else:
+					# Disabled account
+					pass
+			else:
+				new_form=LoginForm()
+				return render(request,'mainapp/index.html',{'message':'Wrong Username or password','form':new_form})
 	else:
-		form=LoginForm()
-
-	return render(request,'mainapp/index.html',{'form':form})	
+		if(request.user.is_authenticated()):
+			return redirect('home')
+		else:
+			new_form=LoginForm()
+			return render(request, 'mainapp/index.html',{'form':new_form})
 
 def signup(request):
 	if (request.method== 'POST'):
@@ -47,16 +54,35 @@ def signup(request):
 			username=form.cleaned_data['username']
 			email=form.cleaned_data['email']
 			password=form.cleaned_data['password']
+			repassword=form.cleaned_data['repassword']
 			first_name=form.cleaned_data['first_name']
 			last_name=form.cleaned_data['last_name']
+
+			if(password!=repassword):
+				return render(request,'mainapp/signup.html',{'form':form})
 			
-			user = User.objects.create_user(username, email, password)
+			user = auth.models.User.objects.create_user(username, email, password)
 			user.first_name=first_name
 			user.last_name=last_name
 			user.save()
 
-			return HttpResponseRedirect(reverse('home',))
-	else:
-		form=SignupForm()
+			new_form=SignupForm()
+			return render(request,'mainapp/signup.html',{'form':new_form,'message':'User has been created'})
 
+		else:
+			return render(request,'mainapp/signup.html',{'form':form})
+	form=SignupForm()
 	return render(request,'mainapp/signup.html',{'form':form})
+
+def logout(request):
+	auth.logout(request)
+	return redirect('index')
+
+
+@login_required(redirect_field_name='index')
+def home(request):
+	return render(request,'mainapp/home.html')
+
+def test(request):
+	pass
+	
