@@ -29,7 +29,7 @@ class LoginForm(forms.Form):
 	username=forms.CharField(max_length=30,widget=forms.TextInput(attrs={'class':'form-control input-xlarge'}))	
 	password=forms.CharField(max_length=30,widget=forms.PasswordInput(attrs={'class':'form-control input-xlarge'}))	
 
-def index(request):
+def home(request):
 	if(request.method=='POST'):
 		form=LoginForm(request.POST)
 		if(form.is_valid()):
@@ -55,7 +55,7 @@ def signup(request):
 			user.last_name=last_name
 			user.save()
 
-			return render(request,'mainapp/index.html',{'message':'User has been Created'})
+			return HttpResponseRedirect(reverse('home',))
 	else:
 		form=SignupForm()
 
