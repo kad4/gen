@@ -1,17 +1,29 @@
 {% extends "mainapp/base.html" %}
 
 {% block content %}
-	<div class="col-sm-8">
+	<!-- Content -->
+	<div class="col-sm-8 well well-lg" style="">
+		{% for post in posts %}
+		<div class="row">
+            <div class="col-sm-12">
+              <a href="#"><h4 style="margin-bottom:0px;">{{ post.title }}</h4></a>
+              <div class="row">
+                <div class="col-xs-9">
+                  <h5 style="margin-top:0px;"><small class="text-muted">{{ post.created_at|date:"M d" }} | <a href="#" class="text-muted">2 comments</a></small></h5>
+                  <h5><span class="label label-default">{{ post.site.name }}</span></h5>
+              	</div>
+                <div class="col-xs-3"></div>
+              </div>
+            </div>
+		</div>
+		{% endfor %}
+	</div>
 
+	<!-- End of content -->
+
+	<!--Sidebar -->
+	<div class="col-sm-3 col-sm-offset-1 well well-lg">
+		Sidebar
 	</div>
-	<div class="col-sm-4">
-		
- 		
-		<p>
-			
-			<input type="text" class="form-control" placeholder="Search something">
-		</p>
-		<div class="hline"></div>
- 		<div class="spacing"></div>
-	</div>
+	<!-- End of sidebar -->
 {% endblock %}

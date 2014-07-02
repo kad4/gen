@@ -78,10 +78,10 @@ def logout(request):
 	auth.logout(request)
 	return redirect('index')
 
-
 @login_required(redirect_field_name='index')
 def home(request):
-	return render(request,'mainapp/home.html')
+	posts=post.objects.all()
+	return render(request,'mainapp/home.html',{'posts':posts})
 
 def test(request):
 	pass
