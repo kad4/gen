@@ -5,7 +5,7 @@ class site(models.Model):
 	name= models.CharField(max_length=30)
 	feed_url= models.URLField()
 	last_access= models.DateTimeField()
-	frequency= models.DateTimeField()
+	frequency= models.IntegerField()
 
 	def __str__(self):
 		return self.name
