@@ -3,8 +3,7 @@
 
 ### What is this repository for? ###
 
-* Quick summary
-Gen is a personalized news recommendation system which recommends the news to the user based on their reading habit.
+* Gen is a personalized news recommendation system which recommends the news to the user based on their reading habit.
 
 * Version
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
