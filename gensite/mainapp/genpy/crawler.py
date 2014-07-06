@@ -8,15 +8,9 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 from urllib.request import urlopen
 
-from mainapp.models import site
-
 class sitecrawler:
-	def __init__(self):
-		sites=site.objects.all()
-
-		self.allUrls = []
-		for data in sites:
-			self.allUrls.append(data.feed_url)
+	def __init__(self,sites):
+		self.allUrls=sites
 		self.fileInUse= 0
 		self.sitesCrawled = 0
 		self.URLs=[]
@@ -77,6 +71,7 @@ class sitecrawler:
 			self.URLs.append(url)
 
 		self.sitesCrawled += 1
+		
 		# storeURLs()
 
 		print(self.URLs)
@@ -118,8 +113,7 @@ class sitecrawler:
 			newThread.start()
 
 if __name__ == '__main__':
-	crawler=sitecrawler()
-	crawler.start()
+	pass
 
 
 

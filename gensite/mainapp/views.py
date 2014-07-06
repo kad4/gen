@@ -5,7 +5,7 @@ from django.http import HttpResponse
 
 from django.contrib.auth.decorators import login_required
 
-from mainapp.models import post,rating 
+from mainapp.models import post,rating,site
 
 from mainapp.genpy import crawler
 
@@ -86,7 +86,17 @@ def home(request):
 	return render(request,'mainapp/home.html',{'posts':posts})
 
 def test(request):
-	sitecrawler=crawler.sitecrawler()
+	sites=site.objects.all()
+
+	Urls = []
+	for data in sites:
+		Urls.append(data.feed_url)
+
+	sitecrawler=crawler.sitecrawler(Urls)
 	sitecrawler.start()
+
+	# Contains the URLs
+	# sitecrawler.URLs
+
 	return HttpResponse('Success')
 	
