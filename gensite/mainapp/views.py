@@ -5,7 +5,9 @@ from django.http import HttpResponse
 
 from django.contrib.auth.decorators import login_required
 
-from mainapp.models import post,rating
+from mainapp.models import post,rating 
+
+from mainapp.genpy import crawler
 
 class SignupForm(forms.ModelForm):
 	class Meta:
@@ -84,5 +86,7 @@ def home(request):
 	return render(request,'mainapp/home.html',{'posts':posts})
 
 def test(request):
-	pass
+	sitecrawler=crawler.sitecrawler()
+	sitecrawler.start()
+	return HttpResponse('Success')
 	

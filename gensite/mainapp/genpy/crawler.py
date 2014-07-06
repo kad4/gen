@@ -7,127 +7,120 @@ import urllib.request
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 from urllib.request import urlopen
-	
-allUrls = ['http://www.ratopati.com/']
-'''[
-	'https://www.ratopati.com/',
-	'http://www.bbc.co.uk/nepali/news/',
-	'http://www.ekantipur.com/np/',
-	'http://www.onlinekhabar.com/',
-	'http://www.setopati.com/',
-]'''
 
-sitesCrawled = 0
-killProcess = False
-opener = urllib.request.build_opener()
-opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-urllib.request.install_opener(opener)
+from mainapp.models import site
 
-def crawler(URL):
-	currentList = [URL]
-	visitedList = [URL]
+class sitecrawler:
+	def __init__(self):
+		sites=site.objects.all()
 
-	parsedURL = urlparse(URL)
-	print ("Crawling",parsedURL.netloc)
+		self.allUrls = []
+		for data in sites:
+			self.allUrls.append(data.feed_url)
+		self.fileInUse= 0
+		self.sitesCrawled = 0
+		self.URLs=[]
 
-	errorCount = 0
-	while currentList.__len__() > 0:
-		# print (currentList.__len__())
-		url = currentList.pop(0)
-		print ("Current URL:",url[0:100])
+		opener = urllib.request.build_opener()
+		opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+		urllib.request.install_opener(opener)
 
-		try:
-			currentPage = urlopen(url).read()
-			print (currentPage)
-			soup = BeautifulSoup(currentPage)
-		except Exception as e:
-			print ('Error loading', url[0:100])
-			print (e)
-			errorCount += 1
-			continue
+	def crawler(self,URL):
+		currentList = [URL]
+		visitedList = [URL]
 
-		if url not in visitedList:
-			visitedList.append(url)
+		parsedURL = urlparse(URL)
+		print ("Crawling",parsedURL.netloc)
 
-		soupLinks = soup.findAll("a", href = True)
-		for soupLink in soupLinks:
-			
-			tempURL = urljoin(url, soupLink['href'])
-			
-			if URL not in tempURL:
+		errorCount = 0
+		while currentList.__len__() > 0:
+			# print (currentList.__len__())
+			url = currentList.pop(0)
+			print ("Current URL:",url[0:100])
+
+			try:
+				currentPage = urlopen(url).read()
+				# print (currentPage)
+				soup = BeautifulSoup(currentPage)
+			except Exception as e:
+				print ('Error loading', url[0:100])
+				print (e)
+				errorCount += 1
 				continue
 
-			reTempURL = re.findall(r'(.*)#.*', tempURL)
+			if url not in visitedList:
+				visitedList.append(url)
 
-			if reTempURL != []:
-				tempURL = reTempURL[0]
+			soupLinks = soup.findAll("a", href = True)
+			for soupLink in soupLinks:
+				
+				tempURL = urljoin(url, soupLink['href'])
+				
+				if URL not in tempURL:
+					continue
 
-			if tempURL not in visitedList and tempURL not in currentList:
-				currentList.append(tempURL)
-			
-			if killProcess==True:
-				currentList.clear()
+				reTempURL = re.findall(r'(.*)#.*', tempURL)
 
+				if reTempURL != []:
+					tempURL = reTempURL[0]
 
-	print ("Crawling Completed!\nTotal URLs:", visitedList.__len__(), "\nTotal Errors:", errorCount)
-	return visitedList
+				if tempURL not in visitedList and tempURL not in currentList:
+					currentList.append(tempURL)
 
-def multiCrawl(URL):
-	global sitesCrawled, URLs
+		print ("Crawling Completed!\nTotal URLs:", visitedList.__len__(), "\nTotal Errors:", errorCount)
+		return visitedList
 
-	crawlURL = crawler(URL)
+	def multiCrawl(self,URL):
+		crawlURL = self.crawler(URL)
 
-	for url in crawlURL:
-		URLs.append(url)
+		for url in crawlURL:
+			self.URLs.append(url)
 
-	sitesCrawled += 1
-	storeURLs()
+		self.sitesCrawled += 1
+		# storeURLs()
 
-	print (sitesCrawled,"/",allUrls.__len__(), "Jobs Completed")
+		print(self.URLs)
+		print (self.sitesCrawled,"/",self.allUrls.__len__(), "Jobs Completed")
 
-def storeURLs():
-	global fileInUse, URLs
+	def storeURLs(self):
+		self.fileInUse.acquire()
+		print ("Writing to disk")
+		urlList = []
+		try:
+			f = open('sites', 'rb')
+			urlList = pickle.load(f)
+			for url in self.URLs:
+				if url not in urlList:
+					urlList.append(url)
 
-	fileInUse.acquire()
-	print ("Writing to disk")
-	urlList = []
-	try:
-		f = open('sites', 'rb')
-		urlList = pickle.load(f)
-		for url in URLs:
-			if url not in urlList:
-				urlList.append(url)
+			f.close()
+			print ("Loaded old database")
+		except:
+			urlList = self.URLs
+			print ("Error in database. Creating new database")
 
+		f = open('sites', 'wb')
+		pickle.dump(urlList,f, protocol = pickle.HIGHEST_PROTOCOL)
 		f.close()
-		print ("Loaded old database")
-	except:
-		urlList = URLs
-		print ("Error in database. Creating new database")
 
-	f = open('sites', 'wb')
-	pickle.dump(urlList,f, protocol = pickle.HIGHEST_PROTOCOL)
-	f.close()
+		print ("Link stored successfully")
+		fileInUse.release()
 
-	print ("Link stored successfully")
-	fileInUse.release()
+	def start(self):
+		URLs = []
+		Threads = []
+		self.fileInUse=threading.Lock()
+
+		for URL in self.allUrls:
+			threadName = urlparse(URL).netloc.split('@')[-1].split(':')[0]
+			newThread = threading.Thread(target = self.multiCrawl, args = (URL,), name = threadName)
+			Threads.append(newThread)
+			newThread.start()
 
 if __name__ == '__main__':
-	global fileInUse
+	crawler=sitecrawler()
+	crawler.start()
 
-	fileInUse = threading.Lock()
-
-	URLs = []
-	Threads = []
-	
-	for URL in allUrls:
-		threadName = urlparse(URL).netloc.split('@')[-1].split(':')[0]
-		newThread = threading.Thread(target = multiCrawl, args = (URL,), name = threadName)
-		Threads.append(newThread)
-		newThread.start()
-
-	while(threading.active_count() > 1):
-		if (sys.stdin.read(1) == 's'):
-			killProcess = True
 
 
 
