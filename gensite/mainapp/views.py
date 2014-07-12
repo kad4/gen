@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 from mainapp.models import post,rating,site
 
-from mainapp.genpy import crawler
+from genpy import crawler
 
 class SignupForm(forms.ModelForm):
 	class Meta:
