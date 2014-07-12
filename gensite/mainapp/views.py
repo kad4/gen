@@ -42,6 +42,10 @@ def index(request):
 			else:
 				new_form=LoginForm()
 				return render(request,'mainapp/index.html',{'message':'Wrong Username or password','form':new_form})
+		else:
+			new_form=LoginForm()
+			return render(request,'mainapp/index.html',{'message':'Wrong Username or password','form':new_form})
+
 	else:
 		if(request.user.is_authenticated()):
 			return redirect('home')
