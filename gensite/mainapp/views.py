@@ -103,4 +103,8 @@ def test(request):
 	# sitecrawler.URLs
 
 	return HttpResponse('Success')
+
+
+def crawler(request):
+	return render(request,'mainapp/crawler.html')
 	
