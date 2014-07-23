@@ -106,5 +106,6 @@ def test(request):
 
 
 def crawler(request):
-	return render(request,'mainapp/crawler.html')
+	sites=site.objects.all()
+	return render(request,'mainapp/crawler.html',{'title':'Crawler','sites':sites})
 	
