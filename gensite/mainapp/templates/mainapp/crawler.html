@@ -1,0 +1,32 @@
+{% extends "admin/base_site.html" %}
+
+{% load i18n admin_static %}
+
+{% block extrastyle %}{{ block.super }}<link rel="stylesheet" type="text/css" href="{% static "admin/css/dashboard.css" %}" />{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+
+{% block bodyclass %}dashboard{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+<div class="module">
+    <table>
+	    <caption>
+	        <span class="section">Sites</span>
+	    </caption>
+        <tbody>
+        {% for item in sites %}
+            <tr class="model-post">
+                <th scope="row">{{item.name}}</th>
+                <td><a href="">Crawl</a></td>
+            </tr>
+        {% endfor %}
+    	</tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+{% endblock %}

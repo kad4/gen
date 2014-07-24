@@ -103,4 +103,9 @@ def test(request):
 	# sitecrawler.URLs
 
 	return HttpResponse('Success')
+
+
+def crawler(request):
+	sites=site.objects.all()
+	return render(request,'mainapp/crawler.html',{'title':'Crawler','sites':sites})
 	
