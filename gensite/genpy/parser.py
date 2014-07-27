@@ -1,13 +1,7 @@
-import lxml
 import pickle
-import re
-import sys
-import threading
-import urllib.request
 import time
 
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse, urljoin
 from urllib.request import urlopen
 
 
