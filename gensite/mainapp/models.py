@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 
 class site(models.Model):
 	name= models.CharField(max_length=30)
-	feed_url= models.URLField()
+	url= models.URLField()
+	rssurl= models.URLField()
 	last_access= models.DateTimeField()
 	frequency= models.IntegerField()
 

@@ -6,5 +6,6 @@ urlpatterns = patterns('',
 	url(r'^home/', views.home, name='home'),	
 	url(r'^signup/',views.signup,name='signup'),
 	url(r'^logout/',views.logout,name='logout'),
-	url(r'^crawler/',views.crawler,name='crawler'),
+	url(r'^crawler/',views.crawleradmin,name='crawleradmin'),
+	url(r'^crawlsite/(?P<id>\d+)/',views.crawlsite,name='crawlsite'),
 	)

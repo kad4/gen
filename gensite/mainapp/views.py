@@ -104,8 +104,16 @@ def test(request):
 
 	return HttpResponse('Success')
 
-
-def crawler(request):
+def crawleradmin(request):
 	sites=site.objects.all()
 	return render(request,'mainapp/crawler.html',{'title':'Crawler','sites':sites})
+
+def crawlsite(request,id):
+	crawl_site=site.objects.get(pk=id)
+	obj=crawler.sitecrawler(crawl_site.url)
+	obj.startCrawl()
+	return HttpResponse('')
+
+
+
 	
