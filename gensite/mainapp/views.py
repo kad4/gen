@@ -107,6 +107,7 @@ def test(request):
 	# 	except:
 	# 		pass
 	# return HttpResponse('Alldone')
+	pass
 
 def crawleradmin(request):
 	sites=site.objects.all()
@@ -116,8 +117,9 @@ def crawlsite(request,id):
 	crawl_site=site.objects.get(pk=id)
 	obj=crawler.sitecrawler({crawl_site.url})
 	obj.startCrawl()
-	return HttpResponse('Done')
 
-
+	for items in obj.Articles:
+		new_post=post(title=items[0],url=items[2],created_at=(items[1]),site_id=id)
 
 	
+	return HttpResponse('Crawling completed')

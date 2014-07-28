@@ -76,6 +76,7 @@ class sitecrawler:
 
     def isArticle(self, url, soup):
         # Function determines if given url opens an news article
+        articleURL = url
         article = False
         netloc = urlparse(url).netloc
         path = urlparse(url).path
@@ -93,7 +94,7 @@ class sitecrawler:
             pass
 
         if article is True:
-            return [True, articleTitle, articleDate]
+            return [True, articleTitle, articleDate, articleURL]
         else:
             return [False]
 
@@ -149,6 +150,6 @@ class sitecrawler:
         for URL in self.sourceURLs:
             print("URL:", URL)
             threadName = urlparse(URL).netloc.split('@')[-1].split(':')[0]
-            newThread = threading.Thread(
-                target=self.multiCrawl, args=(URL,), name = threadName)
-            newThread.start()
+            self.multiCrawl(URL)
+            # newThread = threading.Thread(target=self.multiCrawl, args=(URL,), name = threadName)
+            # newThread.start()
