@@ -87,6 +87,7 @@ class sitecrawler:
             if (cond1 and cond2) is True:
                 articleTitle = div.h2.text.encode('utf-8', 'ignore')
                 articleDate = path.split('.')[0].split('/')[1:-1]
+                articleURL = url
                 article = True
         if netloc == 'www.setopati.com':
             pass
