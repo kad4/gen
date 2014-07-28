@@ -20,7 +20,7 @@
         {% for item in sites %}
             <tr class="model-post">
                 <th scope="row">{{item.name}}</th>
-                <td><a href="">Crawl</a></td>
+                <td><a href="{% url 'crawlsite' item.id%}">Crawl</a></td>
             </tr>
         {% endfor %}
     	</tbody>
