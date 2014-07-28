@@ -115,11 +115,14 @@ def crawleradmin(request):
 
 def crawlsite(request,id):
 	crawl_site=site.objects.get(pk=id)
-	obj=crawler.sitecrawler({crawl_site.url})
-	obj.startCrawl()
+	try:
+		obj=crawler.sitecrawler({crawl_site.url})
+		obj.startCrawl()
 
-	for items in obj.Articles:
-		new_post=post(title=items[0],url=items[2],created_at=(items[1]),site_id=id)
+		for items in obj.Articles:
+			new_post=post(title=items[0],created_at=items[1],url=items[2],site_id=id)
+			new_post.save()
 
-	
-	return HttpResponse('Crawling completed')
+		return HttpResponse('Crawling Completed Without Errors')
+	except:
+		return HttpResponse('Errors occured')

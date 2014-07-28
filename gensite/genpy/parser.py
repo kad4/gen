@@ -50,7 +50,7 @@ def parseXML(URL, PAGE, SOUP):
         itemList = soup.findAll('item')
         for item in itemList:
             articleTitle = item.title.text.encode('utf-8')
-            articleDate = list(time.strptime(item.pubDate.text, '%a, %d %b %Y %X %z')[:3])  # Thu, 24 Jul 2014 11:32:24 +0000
+            articleDate = list(time.strtime(item.pubDate.text, '%a, %d %b %Y %X %z')[:3])  # Thu, 24 Jul 2014 11:32:24 +0000
             articleURL = item.link.text
             pageOutput.append([articleTitle, articleDate, articleURL])
 

@@ -36,7 +36,7 @@ class sitecrawler:
         errorCount = 0
 
         # Beginning crawler loop
-        while currentList.__len__() > 0:  # and visitedList.__len__() < 20:
+        while currentList.__len__() > 0 and visitedList.__len__() < 20:
             url = currentList.pop(0)
             if urlparse(url).netloc != urlparse(URL).netloc:
                 continue
@@ -86,7 +86,8 @@ class sitecrawler:
             cond2 = div is not None
             if (cond1 and cond2) is True:
                 articleTitle = div.h2.text.encode('utf-8', 'ignore')
-                articleDate = path.split('.')[0].split('/')[1:-1]
+                articleDatelst = path.split('.')[0].split('/')[1:-1]
+                articleDate = articleDatelst[0] + '-' + articleDatelst[1] + '-' + articleDatelst[2]
                 articleURL = url
                 article = True
         if netloc == 'www.setopati.com':
