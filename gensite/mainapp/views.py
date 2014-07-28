@@ -2,6 +2,8 @@ from django import forms
 from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.db import connection
+import pdb
 
 from django.contrib.auth.decorators import login_required
 
@@ -90,19 +92,21 @@ def home(request):
 	return render(request,'mainapp/home.html',{'posts':posts})
 
 def test(request):
-	sites=site.objects.all()
+	# User table seeder
 
-	Urls = []
-	for data in sites:
-		Urls.append(data.feed_url)
-
-	sitecrawler=crawler.sitecrawler(Urls)
-	sitecrawler.start()
-
-	# Contains the URLs
-	# sitecrawler.URLs
-
-	return HttpResponse('Success')
+	# cursor=connection.cursor()
+	# cursor.execute("SELECT * FROM MOCK_DATA")
+	# rows=cursor.fetchall()
+	# print(rows[0])
+	# for row in rows:
+	# 	try:
+	# 		user = auth.models.User.objects.create_user(row[4], row[7], 'kathmandu')
+	# 		user.first_name=row[5]
+	# 		user.last_name=row=[6]
+	# 		user.save()
+	# 	except:
+	# 		pass
+	# return HttpResponse('Alldone')
 
 def crawleradmin(request):
 	sites=site.objects.all()
@@ -110,9 +114,9 @@ def crawleradmin(request):
 
 def crawlsite(request,id):
 	crawl_site=site.objects.get(pk=id)
-	obj=crawler.sitecrawler(crawl_site.url)
+	obj=crawler.sitecrawler({crawl_site.url})
 	obj.startCrawl()
-	return HttpResponse('')
+	return HttpResponse('Done')
 
 
 
