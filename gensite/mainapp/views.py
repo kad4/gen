@@ -120,14 +120,13 @@ def crawlsite(request,id):
 	try:
 		obj=crawler.sitecrawler({crawl_site.url})
 		obj.startCrawl()
+		
 		utc=pytz.UTC
-		try:
-			for items in obj.Articles:
-				# new_post=post(title=items[0],created_at=utc.localize(datetime.strptime(items[1], "%Y-%m-%d")),url=items[2],site_id=id)
-				new_post=post(title=items[0],created_at=items[1],url=items[2],site_id=id)
-				new_post.save()
-		except:
-			return HttpResponse('Database Error')
+
+		for items in obj.Articles:
+			# new_post=post(title=items[0],created_at=utc.localize(datetime.strptime(items[1], "%Y-%m-%d")),url=items[2],site_id=id)
+			new_post=post(title=items[0],created_at=utc.localize(items[1]),url=items[2],site_id=id)
+			new_post.save()
 
 		return HttpResponse('Crawling Completed')
 	except:
