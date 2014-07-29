@@ -3,7 +3,9 @@ from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db import connection
-import pdb
+from django.utils import timezone
+from datetime import datetime
+import pytz
 
 from django.contrib.auth.decorators import login_required
 
@@ -106,8 +108,8 @@ def test(request):
 	# 		user.save()
 	# 	except:
 	# 		pass
-	# return HttpResponse('Alldone')
-	pass
+
+	return HttpResponse('Alldone')
 
 def crawleradmin(request):
 	sites=site.objects.all()
@@ -118,11 +120,15 @@ def crawlsite(request,id):
 	try:
 		obj=crawler.sitecrawler({crawl_site.url})
 		obj.startCrawl()
+		utc=pytz.UTC
+		try:
+			for items in obj.Articles:
+				# new_post=post(title=items[0],created_at=utc.localize(datetime.strptime(items[1], "%Y-%m-%d")),url=items[2],site_id=id)
+				new_post=post(title=items[0],created_at=items[1],url=items[2],site_id=id)
+				new_post.save()
+		except:
+			return HttpResponse('Database Error')
 
-		for items in obj.Articles:
-			new_post=post(title=items[0],created_at=items[1],url=items[2],site_id=id)
-			new_post.save()
-
-		return HttpResponse('Crawling Completed Without Errors')
+		return HttpResponse('Crawling Completed')
 	except:
 		return HttpResponse('Errors occured')

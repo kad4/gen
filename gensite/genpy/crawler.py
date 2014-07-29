@@ -2,6 +2,7 @@ import pickle
 import re
 import threading
 import urllib.request
+from datetime import datetime
 
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
@@ -36,7 +37,7 @@ class sitecrawler:
         errorCount = 0
 
         # Beginning crawler loop
-        while currentList.__len__() > 0 and visitedList.__len__() < 20:
+        while currentList.__len__() > 0 and visitedList.__len__() < 18:
             url = currentList.pop(0)
             if urlparse(url).netloc != urlparse(URL).netloc:
                 continue
@@ -87,7 +88,9 @@ class sitecrawler:
             if (cond1 and cond2) is True:
                 articleTitle = div.h2.text.encode('utf-8', 'ignore')
                 articleDatelst = path.split('.')[0].split('/')[1:-1]
-                articleDate = articleDatelst[0] + '-' + articleDatelst[1] + '-' + articleDatelst[2]
+                # articleDate = articleDatelst[0] + '-' + articleDatelst[1] + '-' + articleDatelst[2]
+                articleDate=datetime.datetime(int(articleDatelst[0]),int(articleDatelst[1]),int(articleDatelst[2]))
+
                 articleURL = url
                 article = True
         if netloc == 'www.setopati.com':
