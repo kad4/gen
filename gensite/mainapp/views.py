@@ -3,13 +3,15 @@ from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db import connection
-from django.utils import timezone
-from datetime import datetime
-import pytz
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 
 from mainapp.models import post,rating,site
+
+from datetime import datetime
+import pytz
+
+
 
 from genpy import crawler
 
@@ -90,7 +92,18 @@ def logout(request):
 
 @login_required(redirect_field_name='index')
 def home(request):
-	posts=post.objects.all().order_by('-created_at')
+	total_posts=post.objects.all().order_by('-created_at')
+	paginator = Paginator(total_posts, 10)
+
+	page = request.GET.get('page')
+	try:
+		posts = paginator.page(page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		posts = paginator.page(1)
+	except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+		posts = paginator.page(paginator.num_pages)
 	return render(request,'mainapp/home.html',{'posts':posts})
 
 def test(request):
