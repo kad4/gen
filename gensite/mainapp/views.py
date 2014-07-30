@@ -90,7 +90,7 @@ def logout(request):
 
 @login_required(redirect_field_name='index')
 def home(request):
-	posts=post.objects.all()
+	posts=post.objects.all().order_by('-created_at')
 	return render(request,'mainapp/home.html',{'posts':posts})
 
 def test(request):

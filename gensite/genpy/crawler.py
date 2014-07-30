@@ -37,7 +37,7 @@ class sitecrawler:
         errorCount = 0
 
         # Beginning crawler loop
-        while currentList.__len__() > 0 and visitedList.__len__() < 18:
+        while currentList.__len__() > 0 and visitedList.__len__() < 800:
             url = currentList.pop(0)
             if urlparse(url).netloc != urlparse(URL).netloc:
                 continue
