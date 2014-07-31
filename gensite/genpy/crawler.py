@@ -6,6 +6,7 @@ import urllib.request
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 from urllib.request import urlopen
+from exclusion import ext
 
 
 class sitecrawler:
@@ -40,6 +41,11 @@ class sitecrawler:
             url = currentList.pop(0)
             if urlparse(url).netloc != urlparse(URL).netloc:
                 continue
+
+            extension = urlparse(url).path.split('.')[-1]
+            if extension in ext:
+                continue
+
             print("Current URL:", url[0:100])
             try:
                 currentPage = urlopen(url).read()
