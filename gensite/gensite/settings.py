@@ -30,6 +30,8 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
+import djcelery
+djcelery.setup_loader()
 
 # Application definition
 
@@ -40,6 +42,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djcelery',
     'mainapp',
 )
 
@@ -94,3 +97,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+
