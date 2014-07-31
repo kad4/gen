@@ -3,11 +3,15 @@ from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db import connection
-import pdb
-
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 
 from mainapp.models import post,rating,site
+
+from datetime import datetime
+import pytz
+
+
 
 from genpy import crawler
 
@@ -88,7 +92,18 @@ def logout(request):
 
 @login_required(redirect_field_name='index')
 def home(request):
-	posts=post.objects.all()
+	total_posts=post.objects.all().order_by('-created_at')
+	paginator = Paginator(total_posts, 10)
+
+	page = request.GET.get('page')
+	try:
+		posts = paginator.page(page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		posts = paginator.page(1)
+	except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+		posts = paginator.page(paginator.num_pages)
 	return render(request,'mainapp/home.html',{'posts':posts})
 
 def test(request):
@@ -106,7 +121,8 @@ def test(request):
 	# 		user.save()
 	# 	except:
 	# 		pass
-	# return HttpResponse('Alldone')
+
+	return HttpResponse('Alldone')
 
 def crawleradmin(request):
 	sites=site.objects.all()
@@ -114,10 +130,17 @@ def crawleradmin(request):
 
 def crawlsite(request,id):
 	crawl_site=site.objects.get(pk=id)
-	obj=crawler.sitecrawler({crawl_site.url})
-	obj.startCrawl()
-	return HttpResponse('Done')
+	try:
+		obj=crawler.sitecrawler({crawl_site.url})
+		obj.startCrawl()
+		
+		utc=pytz.UTC
 
+		for items in obj.Articles:
+			# new_post=post(title=items[0],created_at=utc.localize(datetime.strptime(items[1], "%Y-%m-%d")),url=items[2],site_id=id)
+			new_post=post(title=items[0],created_at=utc.localize(items[1]),url=items[2],site_id=id)
+			new_post.save()
 
-
-	
+		return HttpResponse('Crawling Completed')
+	except:
+		return HttpResponse('Errors occured')
