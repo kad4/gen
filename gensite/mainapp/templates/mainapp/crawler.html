@@ -14,7 +14,7 @@
 <div class="module">
     <table>
 	    <caption>
-	        <span class="section">Sites</span>
+	        <span class="section">Site Crawler</span>
 	    </caption>
         <tbody>
         {% for item in sites %}
@@ -26,6 +26,23 @@
     	</tbody>
     </table>
 </div>
+
+<div class="module">
+    <table>
+        <caption>
+            <span class="section">RSS Reader</span>
+        </caption>
+        <tbody>
+        {% for item in sites %}
+            <tr class="model-post">
+                <th scope="row">{{item.name}}</th>
+                <td><a href="#">Start RSS Reader</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 {% endblock %}
 
 {% block sidebar %}
