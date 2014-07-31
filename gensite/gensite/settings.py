@@ -92,8 +92,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Settings to use celery
-# Database backend
+# Configuration for celery
+CELERY_TASK_SERIALIZER='json'
+CELERY_ACCEPT_CONTENT=['json'] # Ignore other content
+CELERY_RESULT_SERIALIZER='json'
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 
 
