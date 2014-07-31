@@ -22,31 +22,28 @@
 	            </div>
 			</div>
 			{% endfor %}
-			<div class="row">
+			<div class="row" style="margin-top:10px;">
 				<div class="col-sm-12">
-					<div class="pagination">
-						<span class="step-links">
-							{% if posts.has_previous %}
-								<span class="label label-default"><a href="?page={{ posts.previous_page_number }}">previous</a></span>
-							{% endif %}
-							
-							<!-- <span class="current">
-								Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
-							</span> -->
+					<span class="step-links">
+						{% if posts.has_previous %}
+							<a href="?page={{ posts.previous_page_number }}"><span class="label label-default">Previous</span></a>
+						{% endif %}
+						
+						<!-- <span class="current">
+							Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+						</span> -->
 
-							{% if posts.has_next %}
-								<span class="label label-default"><a href="?page={{ posts.next_page_number }}">next</a></span>
-							{% endif %}
-						</span>
-					</div>
+						{% if posts.has_next %}
+							<a href="?page={{ posts.next_page_number }}"><span class="label label-default">Next</span></a>
+						{% endif %}
+					</span>
 				</div>
 			</div>
 		</div>
 		<!-- End of content -->
 
 		<!--Sidebar -->
-		<div class="col-sm-3 col-sm-offset-1 well well-lg">
-			Sidebar
+		<div class="col-sm-3 col-sm-offset-1">
 		</div>
 		<!-- End of sidebar -->
 	</div>
