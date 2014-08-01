@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from mainapp.models import post,rating,site
 
 from datetime import datetime
+from random import sample,choice
 import pytz
 
 
@@ -105,6 +106,20 @@ def home(request):
 		# If page is out of range (e.g. 9999), deliver last page of results.
 		posts = paginator.page(paginator.num_pages)
 	return render(request,'mainapp/home.html',{'posts':posts})
+
+
+def ratepost(request):
+	users=user.objects.all()
+	posts=post.objects.all()
+	values=[0,1,2]
+	for user as users:
+		sample_posts= sample(posts,200)
+		for rate_post as sample_posts:
+			rating = choice(values)
+			new_rating = rating()
+
+
+	return HttpResponse('Rating Completed')
 
 def test(request):
 	# User table seeder

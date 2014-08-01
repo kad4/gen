@@ -8,5 +8,6 @@ urlpatterns = patterns('',
 	url(r'^logout/',views.logout,name='logout'),
 	url(r'^crawler/',views.crawleradmin,name='crawleradmin'),
 	url(r'^crawlsite/(?P<id>\d+)/',views.crawlsite,name='crawlsite'),
+	url(r'^ratepost/',views.ratepost,name='ratepost'),
 	url(r'^test/',views.test,name='test'),
 	)
