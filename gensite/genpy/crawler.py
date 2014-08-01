@@ -7,7 +7,8 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse, urljoin
 from urllib.request import urlopen
-from exclusion import ext
+
+ext=['jpg','jpeg','png','gif']
 
 
 class sitecrawler:
