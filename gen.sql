@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 28, 2014 at 11:55 AM
+-- Generation Time: Aug 01, 2014 at 07:54 AM
 -- Server version: 5.5.38-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.3
 
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `content_type_id` (`content_type_id`,`codename`),
   KEY `auth_permission_37ef4eb4` (`content_type_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=28 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=52 ;
 
 --
 -- Dumping data for table `auth_permission`
@@ -96,7 +96,31 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (24, 'Can delete post', 8, 'delete_post'),
 (25, 'Can add rating', 9, 'add_rating'),
 (26, 'Can change rating', 9, 'change_rating'),
-(27, 'Can delete rating', 9, 'delete_rating');
+(27, 'Can delete rating', 9, 'delete_rating'),
+(28, 'Can add task state', 10, 'add_taskmeta'),
+(29, 'Can change task state', 10, 'change_taskmeta'),
+(30, 'Can delete task state', 10, 'delete_taskmeta'),
+(31, 'Can add saved group result', 11, 'add_tasksetmeta'),
+(32, 'Can change saved group result', 11, 'change_tasksetmeta'),
+(33, 'Can delete saved group result', 11, 'delete_tasksetmeta'),
+(34, 'Can add interval', 12, 'add_intervalschedule'),
+(35, 'Can change interval', 12, 'change_intervalschedule'),
+(36, 'Can delete interval', 12, 'delete_intervalschedule'),
+(37, 'Can add crontab', 13, 'add_crontabschedule'),
+(38, 'Can change crontab', 13, 'change_crontabschedule'),
+(39, 'Can delete crontab', 13, 'delete_crontabschedule'),
+(40, 'Can add periodic tasks', 14, 'add_periodictasks'),
+(41, 'Can change periodic tasks', 14, 'change_periodictasks'),
+(42, 'Can delete periodic tasks', 14, 'delete_periodictasks'),
+(43, 'Can add periodic task', 15, 'add_periodictask'),
+(44, 'Can change periodic task', 15, 'change_periodictask'),
+(45, 'Can delete periodic task', 15, 'delete_periodictask'),
+(46, 'Can add worker', 16, 'add_workerstate'),
+(47, 'Can change worker', 16, 'change_workerstate'),
+(48, 'Can delete worker', 16, 'delete_workerstate'),
+(49, 'Can add task', 17, 'add_taskstate'),
+(50, 'Can change task', 17, 'change_taskstate'),
+(51, 'Can delete task', 17, 'delete_taskstate');
 
 -- --------------------------------------------------------
 
@@ -125,7 +149,7 @@ CREATE TABLE IF NOT EXISTS `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
-(1, 'pbkdf2_sha256$12000$z6L1bhDbHBnv$H8IFZah4vBBYTZH6wQwynW0ZWs/jzf/n+gswLCogGT8=', '2014-07-27 09:56:49', 1, 'admin', '', '', 'diwasblack@gmail.com', 1, 1, '2014-07-02 03:25:25'),
+(1, 'pbkdf2_sha256$12000$z6L1bhDbHBnv$H8IFZah4vBBYTZH6wQwynW0ZWs/jzf/n+gswLCogGT8=', '2014-07-31 03:48:43', 1, 'admin', '', '', 'diwasblack@gmail.com', 1, 1, '2014-07-02 03:25:25'),
 (2, 'pbkdf2_sha256$12000$F0I05XRd5ZSH$mIVP4f9PULTB+TVdam7RAPYpnigXZl7uVc8jaF0yT3A=', '2014-07-03 01:13:35', 0, 'diwasblack', 'Diwas', 'Sharma', 'diwasblack@gmail.com', 0, 1, '2014-07-02 03:27:53'),
 (3, 'pbkdf2_sha256$12000$KeFr0BXdc7JJ$hSfH2mwan2I9ZAEeKJ/TcTvDZ4g3ElQBN487noSF2yA=', '2014-07-28 06:07:53', 0, 'blopez', 'Marie', 'Griffin', 'mgriffin@zoombox.gov', 0, 1, '2014-07-28 06:07:53'),
 (4, 'pbkdf2_sha256$12000$ZD6kHWxc08eu$ZYGoB+uBxQmmpBB2sjt5MuUcOlNS82LU4Zu9hO2rR1k=', '2014-07-28 06:07:53', 0, 'dwheeler', 'Nicole', 'Johnston', 'njohnston@lazz.gov', 0, 1, '2014-07-28 06:07:53'),
@@ -1030,6 +1054,43 @@ CREATE TABLE IF NOT EXISTS `auth_user_user_permissions` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `celery_taskmeta`
+--
+
+CREATE TABLE IF NOT EXISTS `celery_taskmeta` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `task_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `status` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `result` longtext COLLATE utf8_unicode_ci,
+  `date_done` datetime NOT NULL,
+  `traceback` longtext COLLATE utf8_unicode_ci,
+  `hidden` tinyint(1) NOT NULL,
+  `meta` longtext COLLATE utf8_unicode_ci,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `task_id` (`task_id`),
+  KEY `celery_taskmeta_2ff6b945` (`hidden`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `celery_tasksetmeta`
+--
+
+CREATE TABLE IF NOT EXISTS `celery_tasksetmeta` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `taskset_id` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `result` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `date_done` datetime NOT NULL,
+  `hidden` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `taskset_id` (`taskset_id`),
+  KEY `celery_tasksetmeta_2ff6b945` (`hidden`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `django_admin_log`
 --
 
@@ -1077,7 +1138,7 @@ CREATE TABLE IF NOT EXISTS `django_content_type` (
   `model` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `app_label` (`app_label`,`model`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `django_content_type`
@@ -1092,7 +1153,15 @@ INSERT INTO `django_content_type` (`id`, `name`, `app_label`, `model`) VALUES
 (6, 'session', 'sessions', 'session'),
 (7, 'site', 'mainapp', 'site'),
 (8, 'post', 'mainapp', 'post'),
-(9, 'rating', 'mainapp', 'rating');
+(9, 'rating', 'mainapp', 'rating'),
+(10, 'task state', 'djcelery', 'taskmeta'),
+(11, 'saved group result', 'djcelery', 'tasksetmeta'),
+(12, 'interval', 'djcelery', 'intervalschedule'),
+(13, 'crontab', 'djcelery', 'crontabschedule'),
+(14, 'periodic tasks', 'djcelery', 'periodictasks'),
+(15, 'periodic task', 'djcelery', 'periodictask'),
+(16, 'worker', 'djcelery', 'workerstate'),
+(17, 'task', 'djcelery', 'taskstate');
 
 -- --------------------------------------------------------
 
@@ -1113,7 +1182,123 @@ CREATE TABLE IF NOT EXISTS `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
-('mpra06po37a697lg4bcyj8a1orlmp7sl', 'MTI1ZmM4NTAwZjZiNDgxNWQ4MGJmY2U0NjQxMDkxOGQwMDgyYWE5NDp7Il9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9pZCI6MX0=', '2014-08-10 09:56:49');
+('z1rman71h73nkdob28nehvlt4nk3rrhy', 'Mzk1N2ViMzQwZTgzODFkMTUxNzQyMmZmYzAzYzJlZWE2YWIzNGQ4ZTp7Il9hdXRoX3VzZXJfaWQiOjEsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIn0=', '2014-08-14 03:48:43');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `djcelery_crontabschedule`
+--
+
+CREATE TABLE IF NOT EXISTS `djcelery_crontabschedule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `minute` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `hour` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `day_of_week` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `day_of_month` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `month_of_year` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `djcelery_intervalschedule`
+--
+
+CREATE TABLE IF NOT EXISTS `djcelery_intervalschedule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `every` int(11) NOT NULL,
+  `period` varchar(24) COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `djcelery_periodictask`
+--
+
+CREATE TABLE IF NOT EXISTS `djcelery_periodictask` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `task` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `interval_id` int(11) DEFAULT NULL,
+  `crontab_id` int(11) DEFAULT NULL,
+  `args` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `kwargs` longtext COLLATE utf8_unicode_ci NOT NULL,
+  `queue` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `exchange` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `routing_key` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `expires` datetime DEFAULT NULL,
+  `enabled` tinyint(1) NOT NULL,
+  `last_run_at` datetime DEFAULT NULL,
+  `total_run_count` int(10) unsigned NOT NULL,
+  `date_changed` datetime NOT NULL,
+  `description` longtext COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`),
+  KEY `djcelery_periodictask_8905f60d` (`interval_id`),
+  KEY `djcelery_periodictask_7280124f` (`crontab_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `djcelery_periodictasks`
+--
+
+CREATE TABLE IF NOT EXISTS `djcelery_periodictasks` (
+  `ident` smallint(6) NOT NULL,
+  `last_update` datetime NOT NULL,
+  PRIMARY KEY (`ident`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `djcelery_taskstate`
+--
+
+CREATE TABLE IF NOT EXISTS `djcelery_taskstate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `state` varchar(64) COLLATE utf8_unicode_ci NOT NULL,
+  `task_id` varchar(36) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(200) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tstamp` datetime NOT NULL,
+  `args` longtext COLLATE utf8_unicode_ci,
+  `kwargs` longtext COLLATE utf8_unicode_ci,
+  `eta` datetime DEFAULT NULL,
+  `expires` datetime DEFAULT NULL,
+  `result` longtext COLLATE utf8_unicode_ci,
+  `traceback` longtext COLLATE utf8_unicode_ci,
+  `runtime` double DEFAULT NULL,
+  `retries` int(11) NOT NULL,
+  `worker_id` int(11) DEFAULT NULL,
+  `hidden` tinyint(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `task_id` (`task_id`),
+  KEY `djcelery_taskstate_5654bf12` (`state`),
+  KEY `djcelery_taskstate_4da47e07` (`name`),
+  KEY `djcelery_taskstate_abaacd02` (`tstamp`),
+  KEY `djcelery_taskstate_cac6a03d` (`worker_id`),
+  KEY `djcelery_taskstate_2ff6b945` (`hidden`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `djcelery_workerstate`
+--
+
+CREATE TABLE IF NOT EXISTS `djcelery_workerstate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `hostname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `last_heartbeat` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `hostname` (`hostname`),
+  KEY `djcelery_workerstate_11e400ef` (`last_heartbeat`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -1129,7 +1314,415 @@ CREATE TABLE IF NOT EXISTS `mainapp_post` (
   `site_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `mainapp_post_99732b5c` (`site_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=552 ;
+
+--
+-- Dumping data for table `mainapp_post`
+--
+
+INSERT INTO `mainapp_post` (`id`, `title`, `url`, `created_at`, `site_id`) VALUES
+(151, 'किन छाडे स्वकीय सचिवका बाबुले बाबुरामलाई ?', 'http://www.ratopati.com/2014/07/31/155344.html', '2014-07-31 00:00:00', 2),
+(152, 'सेनाका जवानसहित ३ को मृत्यु', 'http://www.ratopati.com/2014/07/31/155324.html', '2014-07-31 00:00:00', 2),
+(153, 'नाममात्रको १८ सहकारी संस्थाको दर्ता खारेज', 'http://www.ratopati.com/2014/07/31/155323.html', '2014-07-31 00:00:00', 2),
+(154, 'विनियोजन विधेयकमाथि आजदेखि छलफल', 'http://www.ratopati.com/2014/07/31/155302.html', '2014-07-31 00:00:00', 2),
+(155, 'महिलालाई बाँदरले झम्टेपछि…….', 'http://www.ratopati.com/2014/07/30/155271.html', '2014-07-30 00:00:00', 2),
+(156, 'दुई मन्त्रीले अझै बुझाएनन् सम्पत्ति विवरण', 'http://www.ratopati.com/2014/07/31/155330.html', '2014-07-31 00:00:00', 2),
+(157, 'भट्टराइद्वारा पार्टी विघटनको प्रस्ताव', 'http://www.ratopati.com/2014/07/31/155328.html', '2014-07-31 00:00:00', 2),
+(158, 'युएन स्कुलमा आक्रमण,१९ को मृत्यु', 'http://www.ratopati.com/2014/07/31/155299.html', '2014-07-31 00:00:00', 2),
+(159, 'संसद्मा विशिष्ट अतिथिको सम्बोधन मोदीबाट सुरु', 'http://www.ratopati.com/2014/07/31/155294.html', '2014-07-31 00:00:00', 2),
+(160, 'बाहुन डनलाई १५ वर्ष कैदको माग गर्दै मुद्धा', 'http://www.ratopati.com/2014/07/31/155289.html', '2014-07-31 00:00:00', 2),
+(161, 'चरम यातना तराईमा ‘बुहारी’आत्महत्याको कारक', 'http://www.ratopati.com/2014/07/31/155308.html', '2014-07-31 00:00:00', 2),
+(162, 'हिँड्दाहिँड्दै सर्न सक्छ क्षयरोग', 'http://www.ratopati.com/2014/07/31/155291.html', '2014-07-31 00:00:00', 2),
+(163, 'विषादी छिट्नेलाई अनेकथरी रोग', 'http://www.ratopati.com/2014/07/31/155315.html', '2014-07-31 00:00:00', 2),
+(164, 'नेपालमा जन्मेका जितलुाई राष्ट्रमण्डलीय खेलमा स्वर्ण', 'http://www.ratopati.com/2014/07/31/155304.html', '2014-07-31 00:00:00', 2),
+(165, 'हिरोसिमामा बम खसाल्ने पाइलटको अबसान', 'http://www.ratopati.com/2014/07/31/155341.html', '2014-07-31 00:00:00', 2),
+(166, 'अन्तर्राष्ट्रिय नेपाली साहित्य समाज केन्द्रिय अधक्ष्यमा बिश्वकर्मा निर्वाचित ', 'http://www.ratopati.com/2014/07/31/155332.html', '2014-07-31 00:00:00', 2),
+(167, 'साउन १५ खिर खाएर मनाइदै', 'http://www.ratopati.com/2014/07/31/155313.html', '2014-07-31 00:00:00', 2),
+(168, 'दलित विद्यार्थीबाट शुल्क लिने विद्यालयलाई कारवाही गरिने', 'http://www.ratopati.com/2014/07/31/155293.html', '2014-07-31 00:00:00', 2),
+(169, 'प्रहरी नै लागुऔषध कारोवारमा संलग्न !', 'http://www.ratopati.com/2014/07/30/155281.html', '2014-07-30 00:00:00', 2),
+(170, 'भिटोफ–नेपालको निर्वाचनमा सापकोटा प्यानलको घोषणा', 'http://www.ratopati.com/2014/07/30/155278.html', '2014-07-30 00:00:00', 2),
+(171, 'श्रीमतिहरु मेलामा श्रीमानहरु तासमा', 'http://www.ratopati.com/2014/07/30/155273.html', '2014-07-30 00:00:00', 2),
+(172, 'विष्णुमतिले बगाउँदा एक वेपत्ता, एकको सकुशल उद्धार', 'http://www.ratopati.com/2014/07/30/155266.html', '2014-07-30 00:00:00', 2),
+(173, 'कारमा अबैध घरेलु मदिरा बरामद', 'http://www.ratopati.com/2014/07/30/155258.html', '2014-07-30 00:00:00', 2),
+(174, '‘विवादास्पद विधेयक’लाई जनता समक्ष लैजान निर्देशन', 'http://www.ratopati.com/2014/07/30/155284.html', '2014-07-30 00:00:00', 2),
+(175, 'धान्नै नसक्ने गरि भएको ब्यापार घाटा कम गर्न पनि भारतसँग उर्जा सम्झौता गर्नु पर्ने', 'http://www.ratopati.com/2014/07/30/155280.html', '2014-07-30 00:00:00', 2),
+(176, 'अधिकारी दम्पतीको स्वास्थ्यबारे संसदको चासो', 'http://www.ratopati.com/2014/07/30/155182.html', '2014-07-30 00:00:00', 2),
+(177, 'सरकारद्वारा नेपाल–भारतबीचको सहमति संसद्लाई जानकारी', 'http://www.ratopati.com/2014/07/30/155179.html', '2014-07-30 00:00:00', 2),
+(178, 'सुकुम्बासीद्धारा आन्दोलनको घोषणा', 'http://www.ratopati.com/2014/07/30/155173.html', '2014-07-30 00:00:00', 2),
+(179, 'मन्त्रीलाई कालो झोला बोकेर अँगालो हाल्ने को ?', 'http://www.ratopati.com/2014/07/30/155084.html', '2014-07-30 00:00:00', 2),
+(180, 'भारतसँग ऊर्जा व्यापार सम्झौता हस्ताक्षर गर्न तीन दल सहमत', 'http://www.ratopati.com/2014/07/30/155019.html', '2014-07-30 00:00:00', 2),
+(181, 'लक्षित वर्गसम्म पुग्न नसकेको सरकारी छात्रवृत्ति रकम', 'http://www.ratopati.com/2014/07/30/155175.html', '2014-07-30 00:00:00', 2),
+(182, 'जाँदाजाँदै ओलीले भने….', 'http://www.ratopati.com/2014/07/29/154821.html', '2014-07-29 00:00:00', 2),
+(183, 'कोरियाबाट गृहमन्त्री बामदेब गौतमलाई पत्र', 'http://www.ratopati.com/2014/07/27/154483.html', '2014-07-27 00:00:00', 2),
+(184, 'रक्सीभट्टी र निष्ठाको राजनीति', 'http://www.ratopati.com/2014/07/27/154378.html', '2014-07-27 00:00:00', 2),
+(185, 'दर्जनौ गाउँमा यातयात ठप्प, महँङ्गीको मारमा जनता', 'http://www.ratopati.com/2014/07/30/155275.html', '2014-07-30 00:00:00', 2),
+(186, 'अष्ट्रेलियाको बेरोजगारी दर ६ प्रतिशत', 'http://www.ratopati.com/2014/07/30/155255.html', '2014-07-30 00:00:00', 2),
+(187, 'भारतबाट फेसबुकलाई ०.१ प्रतिशतमात्रै आम्दानी', 'http://www.ratopati.com/2014/07/30/155249.html', '2014-07-30 00:00:00', 2),
+(188, 'नब्बे प्रतिशत कृषकद्वारा रासायनिक विषादी प्रयोग', 'http://www.ratopati.com/2014/07/30/155242.html', '2014-07-30 00:00:00', 2),
+(189, 'पहिरोमा एकसय ५० फसेका आशङ्का', 'http://www.ratopati.com/2014/07/30/155247.html', '2014-07-30 00:00:00', 2),
+(190, 'माइक्रोम्यासको दुई नयाँ मोबाइल बजारमा', 'http://www.ratopati.com/2014/07/30/155104.html', '2014-07-30 00:00:00', 2),
+(191, 'कतारमा नेपालीले तलब पाएनन्', 'http://www.ratopati.com/2014/07/30/155109.html', '2014-07-30 00:00:00', 2),
+(192, 'दिनभरीको तनावबाट मुक्त हुन गीत लेखेरै ध्यान गर्छु :गोविन्दप्रसाद उपाध्याय', 'http://www.ratopati.com/2014/07/30/155265.html', '2014-07-30 00:00:00', 2),
+(193, 'आमा बन्दैछिन् कट्रिना कैफ !', 'http://www.ratopati.com/2014/07/30/155202.html', '2014-07-30 00:00:00', 2),
+(194, 'चियागफमा भिम दाई', 'http://www.ratopati.com/2014/07/30/155190.html', '2014-07-30 00:00:00', 2),
+(195, '‘यो तीजमा नाच्ने हो मजैले’', 'http://www.ratopati.com/2014/07/29/154993.html', '2014-07-29 00:00:00', 2),
+(196, 'म पछि आलिया सिरियल किसरः इमरान', 'http://www.ratopati.com/2014/07/29/154830.html', '2014-07-29 00:00:00', 2),
+(197, '‘किसिङ सिनभन्दा पहिले रातभरि सुतिनँ’', 'http://www.ratopati.com/2014/07/28/154719.html', '2014-07-28 00:00:00', 2),
+(198, 'टेलर स्विफ्ट बनिन् ‘लभगुरु’', 'http://www.ratopati.com/2014/07/28/154637.html', '2014-07-28 00:00:00', 2),
+(199, 'हर्सिकाको हाँसो (फोटोफिचर)', 'http://www.ratopati.com/2014/07/30/155223.html', '2014-07-30 00:00:00', 2),
+(200, 'एनआरएन ए बेल्जियमको पाचौ साधारण सभा सम्पन्न', 'http://www.ratopati.com/2014/07/30/155250.html', '2014-07-30 00:00:00', 2),
+(201, 'भारतमा नेपालीका लागि सहायता केन्द स्थापना', 'http://www.ratopati.com/2014/07/29/154769.html', '2014-07-29 00:00:00', 2),
+(202, 'नारायणकाजीले कोरियामा प्रशिक्षण दिने', 'http://www.ratopati.com/2014/07/27/154349.html', '2014-07-27 00:00:00', 2),
+(203, 'चीनको सियानजिङ्मा भएको झडपमा १०० मारिए', 'http://www.ratopati.com/2014/07/30/155244.html', '2014-07-30 00:00:00', 2),
+(204, 'भारतमा बस दुर्घटनामा २१ को ज्यान गयो', 'http://www.ratopati.com/2014/07/30/155169.html', '2014-07-30 00:00:00', 2),
+(205, 'लिबियाका पूर्व उपप्रधानमन्त्रीको अपहरण', 'http://www.ratopati.com/2014/07/30/155166.html', '2014-07-30 00:00:00', 2),
+(206, 'एसियाली खेलकुद प्रतियोगितामा नेपालले सहभागिता जनाउने', 'http://www.ratopati.com/2014/07/30/155287.html', '2014-07-30 00:00:00', 2),
+(207, 'सातौँ राष्ट्रिय खेलकुदका लागि बजेट विनियोजन गरिने', 'http://www.ratopati.com/2014/07/30/155146.html', '2014-07-30 00:00:00', 2),
+(208, 'भान पर्सीसँग तस्विर खिच्दा झण्डै वेटरको जागिर गयो', 'http://www.ratopati.com/2014/07/27/154498.html', '2014-07-27 00:00:00', 2),
+(209, 'विश्वकप फुटबलः रुसको आयोजनाप्रति आपत्ति', 'http://www.ratopati.com/2014/07/27/154455.html', '2014-07-27 00:00:00', 2),
+(210, 'ओलीको कोर टिममा को–को ?', 'http://www.ratopati.com/2014/07/30/155008.html', '2014-07-30 00:00:00', 2),
+(211, 'काठमााडैं,कास्की,मोरङसुनसरी र झापा सबैभन्दा असुरक्षित', 'http://www.ratopati.com/2014/07/30/155006.html', '2014-07-30 00:00:00', 2),
+(212, 'भीआईपीका अंगरक्षकलाई गोली हान्ने अधिकार', 'http://www.ratopati.com/2014/07/30/155003.html', '2014-07-30 00:00:00', 2),
+(213, 'कस्तो छ नेमारलाई ?', 'http://www.ratopati.com/2014/07/30/155017.html', '2014-07-30 00:00:00', 2),
+(214, 'सुरुवाती अवस्थामा उपचार गर्दा पनि निको हुँदैन एड्स', 'http://www.ratopati.com/2014/07/27/154469.html', '2014-07-27 00:00:00', 2),
+(215, 'इन्भर्टर बनाउनुहोस् र जित्नुहोस् ९ करोड', 'http://www.ratopati.com/2014/07/27/154495.html', '2014-07-27 00:00:00', 2),
+(216, 'तपाईंको नाक लामो र मुख गायब भयो भने के होला ? हेर्नुहोस् अनौठा तस्बिरहरु', 'http://www.ratopati.com/2014/07/25/153952.html', '2014-07-25 00:00:00', 2),
+(217, 'मानिसहरु मर्नका लागि किन मरिहत्ते गरिरहेछन् ?', 'http://www.ratopati.com/2014/07/23/153553.html', '2014-07-23 00:00:00', 2),
+(218, 'रिसको झोंकमा चारजनाको अण्डकोष चट्', 'http://www.ratopati.com/2014/07/30/155138.html', '2014-07-30 00:00:00', 2),
+(219, 'सिनेमा घरको भूत सिसिटिभीमा कैद', 'http://www.ratopati.com/2014/07/30/155121.html', '2014-07-30 00:00:00', 2),
+(220, 'जीवन र मृत्युबिच लडाइँ (तस्बिरमा)', 'http://www.ratopati.com/2014/07/29/154894.html', '2014-07-29 00:00:00', 2),
+(221, 'आफ्नै मृत्युको तयारीमा बित्यो दुई वर्ष', 'http://www.ratopati.com/2014/07/28/154715.html', '2014-07-28 00:00:00', 2),
+(222, 'पुरुषले तपाईंबाट चाहने तर कहिले व्यक्त नगर्ने सात कुरा', 'http://www.ratopati.com/2014/07/30/155172.html', '2014-07-30 00:00:00', 2),
+(223, 'यस्ता पुरुषको पछाडि भाग्छन् महिला', 'http://www.ratopati.com/2014/07/29/154957.html', '2014-07-29 00:00:00', 2),
+(224, 'प्रेम सम्बन्ध किन टुट्छ ?', 'http://www.ratopati.com/2014/07/29/154870.html', '2014-07-29 00:00:00', 2),
+(225, 'आमा बनिसकेपछि रोमान्स गर्न किन चाहँदैनन् महिला ?', 'http://www.ratopati.com/2014/07/28/154647.html', '2014-07-28 00:00:00', 2),
+(226, 'गजल', 'http://www.ratopati.com/2014/07/30/155131.html', '2014-07-30 00:00:00', 2),
+(227, 'जन्मभूमि फर्कदै गर्दा आउने सवाल- जवाफ', 'http://www.ratopati.com/2014/07/30/155098.html', '2014-07-30 00:00:00', 2),
+(228, 'मनमाया र मेरी आमा', 'http://www.ratopati.com/2014/07/30/155089.html', '2014-07-30 00:00:00', 2),
+(229, 'गजल', 'http://www.ratopati.com/2014/07/30/155011.html', '2014-07-30 00:00:00', 2),
+(230, 'सडक विस्तारको निहुँमा लाखौंको भ्रष्टाचार', 'http://www.ratopati.com/2014/07/30/155236.html', '2014-07-30 00:00:00', 2),
+(231, 'कार्यसम्पादन मापनमा धनकुटाको ह्याट्रिक', 'http://www.ratopati.com/2014/07/30/155237.html', '2014-07-30 00:00:00', 2),
+(232, 'भाइरलको प्रकोप', 'http://www.ratopati.com/2014/07/30/155233.html', '2014-07-30 00:00:00', 2),
+(233, 'अमेरिकी विदेश मन्त्री केरी बुधबार भारत जादै', 'http://www.ratopati.com/2014/07/30/155164.html', '2014-07-30 00:00:00', 2),
+(234, 'किन पाएनन् ‘उत्कृष्ट परीक्षा केन्द्र’ ले पुरस्कार ?', 'http://www.ratopati.com/2014/07/30/155022.html', '2014-07-30 00:00:00', 2),
+(235, 'भारतीय विदेशमन्त्रीको भ्रमण सफलः मधेसी दल', 'http://www.ratopati.com/2014/07/29/154997.html', '2014-07-29 00:00:00', 2),
+(236, 'मोदीका लागि चार सुरक्षा घेरा', 'http://www.ratopati.com/2014/07/29/154854.html', '2014-07-29 00:00:00', 2),
+(237, 'बलिउडमा बबाल मच्चाउने नेपालीहरु', 'http://www.ratopati.com/2014/07/27/154420.html', '2014-07-27 00:00:00', 2),
+(238, '‘बिग बोस’ मा अर्को पोर्न स्टारको प्रवेश', 'http://www.ratopati.com/2014/07/27/154415.html', '2014-07-27 00:00:00', 2),
+(239, 'भीम निरौलाको सन्डे मर्निङलाई टक्कर दिन आइपुग्यो नेपाली ‘बेबी डल’', 'http://www.ratopati.com/2014/07/27/154407.html', '2014-07-27 00:00:00', 2),
+(240, 'पहिलो दिनमै ३० करोड कमायो सलमानको ‘किक’ ले', 'http://www.ratopati.com/2014/07/26/154263.html', '2014-07-26 00:00:00', 2),
+(241, 'सवारी कारवाहीबाट ९ करोड राजस्व', 'http://www.ratopati.com/2014/07/30/155112.html', '2014-07-30 00:00:00', 2),
+(242, 'एक करोडभन्दा बढी कारोबार गर्ने सहकारीको सङ्ख्या कञ्चनपुरमा तेह्र', 'http://www.ratopati.com/2014/07/30/155239.html', '2014-07-30 00:00:00', 2),
+(243, 'रिलान्स सुगर मिलद्वारा क्षतिपूर्ति प्रदान', 'http://www.ratopati.com/2014/07/30/155232.html', '2014-07-30 00:00:00', 2),
+(244, 'रियल म्याड्रिड इन्टरसँग पराजित', 'http://www.ratopati.com/2014/07/27/154375.html', '2014-07-27 00:00:00', 2),
+(245, 'युनाइटेडद्वारा रोमा पराजित', 'http://www.ratopati.com/2014/07/27/154359.html', '2014-07-27 00:00:00', 2),
+(246, 'विमल बेल्जियम लागे', 'http://www.ratopati.com/2014/07/27/154336.html', '2014-07-27 00:00:00', 2),
+(247, '‘नेमारको दिमाग बयस्क खेलाडीको भन्दा कम’', 'http://www.ratopati.com/2014/07/27/154332.html', '2014-07-27 00:00:00', 2),
+(248, 'रोवर्टिक्स प्रतियोगितामा तीन समूह विजयी', 'http://www.ratopati.com/2014/07/26/154241.html', '2014-07-26 00:00:00', 2),
+(249, 'धेरै राम्री हुँदा कजाकिस्तानका भलिबल खेलाडीलाई आपत्', 'http://www.ratopati.com/2014/07/25/153940.html', '2014-07-25 00:00:00', 2),
+(250, 'एड्स मार्ने कण्डम बजारमा आउँदै', 'http://www.ratopati.com/2014/07/22/153306.html', '2014-07-22 00:00:00', 2),
+(251, 'श्रीमतीले श्रीमानलाई अब धोका दिन नसक्ने', 'http://www.ratopati.com/2014/07/22/153266.html', '2014-07-22 00:00:00', 2),
+(252, 'सन्तानमाथि निगरानी राख्न आमा–बुवापनि आए फेसबुकमा', 'http://www.ratopati.com/2014/07/22/153127.html', '2014-07-22 00:00:00', 2),
+(253, 'गुगलले पायो कुख्यात ह्याकरको साथ', 'http://www.ratopati.com/2014/07/17/152137.html', '2014-07-17 00:00:00', 2),
+(254, 'रिमोटले चल्ने गर्भ निरोधक चिप निर्माण', 'http://www.ratopati.com/2014/07/13/151061.html', '2014-07-13 00:00:00', 2),
+(255, 'प्यालेस्टाइनको रकेट हमलाबारे जानकारी दिन इजरायलले बनायो मोबाइल एप्लीकेसन', 'http://www.ratopati.com/2014/07/13/151018.html', '2014-07-13 00:00:00', 2),
+(256, '‘म मन्त्रीको कारिन्दा होइन, खेलकुदको सेवक हुँ’:युवराज लामा', 'http://www.ratopati.com/2014/07/30/155047.html', '2014-07-30 00:00:00', 2),
+(257, 'स्वराजले पशुपति शमशेरलाई राती भेट्दा समचार नबन्ने तर मधेशी नेतालाई बिहान भेट्दा होहल्ला किन ?: तुलानारायण शाह', 'http://www.ratopati.com/2014/07/29/154976.html', '2014-07-29 00:00:00', 2),
+(258, 'पूर्वराजा ज्ञानेन्द्रले नयाँ पार्टी खोले सबैभन्दा बढी खुसी म हुन्छुः कमल थापा', 'http://www.ratopati.com/2014/07/28/154718.html', '2014-07-28 00:00:00', 2),
+(259, 'कर्मचारीले पिआर लिन नहुने भनी मैले उठाएको मुद्दा दक्षिण एशियाको मुद्दा बन्दैछ : लालबाबु पण्डित', 'http://www.ratopati.com/2014/07/27/154524.html', '2014-07-27 00:00:00', 2),
+(260, 'जनतालाई राजनीतिक परिवर्तन मात्र होइन, आर्थिक परिवर्तन पनि चाहिएको छः सरोज डंगोल', 'http://www.ratopati.com/2014/07/22/153322.html', '2014-07-22 00:00:00', 2),
+(261, 'नेपालका ब्यूरोक्र्याट्, हाकिम, नेताहरु मोटाउँदै छन् र देश दुब्लाउँदैछः वीरेन्द्र बहादुर बस्नेत', 'http://www.ratopati.com/2014/07/20/152725.html', '2014-07-20 00:00:00', 2),
+(262, 'प्राकृतिक स्रोतको घमण्ड गरेर मात्र हुँदैन, लगानी पनि ल्याउन सक्नुपर्छ: राधेश पन्त', 'http://www.ratopati.com/2014/07/15/151594.html', '2014-07-15 00:00:00', 2),
+(263, 'भाजपा पनि नेपालमा हिन्दुराष्ट्र चाहन्छ:  अशोक सिंह नेपाली', 'http://www.ratopati.com/2014/07/13/150966.html', '2014-07-13 00:00:00', 2),
+(264, 'प्यानलको अभ्यासले भोली पार्टी सञ्चालनमा नै अप्ठेरो हुने काम भइरहेको छ', 'http://www.ratopati.com/2014/07/04/148710.html', '2014-07-04 00:00:00', 2),
+(265, 'आफ्नो सानो घरलाई विशाल बनाउने तरिका', 'http://www.ratopati.com/2014/07/27/154418.html', '2014-07-27 00:00:00', 2),
+(266, 'घरमा तनाव छ भने यो तरिका अपनाउनुहोस्', 'http://www.ratopati.com/2014/07/25/153976.html', '2014-07-25 00:00:00', 2),
+(267, 'नरिवलको तेलमा लुकेको सुन्दरताको रहस्य', 'http://www.ratopati.com/2014/07/24/153718.html', '2014-07-24 00:00:00', 2),
+(268, 'मनसुनमा जुत्ताको हेरविचार गर्ने सहि उपाय', 'http://www.ratopati.com/2014/07/23/153481.html', '2014-07-23 00:00:00', 2),
+(269, 'साउनमा दुध पिउन नहुने, आखिर किन ?', 'http://www.ratopati.com/2014/07/22/153304.html', '2014-07-22 00:00:00', 2),
+(270, 'मनसुनमा बिर्सेर पनि नखानुहोस् यस्ता खानेकुरा', 'http://www.ratopati.com/2014/07/22/153232.html', '2014-07-22 00:00:00', 2),
+(271, 'आरक्षण र राज्यको नीति', 'http://www.ratopati.com/2014/07/27/154351.html', '2014-07-27 00:00:00', 2),
+(272, 'प्रतीक्षाका सय घण्टा', 'http://www.ratopati.com/2014/07/27/154321.html', '2014-07-27 00:00:00', 2),
+(273, 'यसकारण हुँदैन सोलोडोलोमा बिद्युत सम्झौता गर्न', 'http://www.ratopati.com/2014/07/26/154169.html', '2014-07-26 00:00:00', 2),
+(274, 'असमान सन्धीको अगुल्टोले हानिएका नेपाली ‘विजुली’ सुन्यो की झस्कन्छन्', 'http://www.ratopati.com/2014/07/26/154133.html', '2014-07-26 00:00:00', 2),
+(275, 'गोबर र खरानीको कथा', 'http://www.ratopati.com/2014/07/26/154108.html', '2014-07-26 00:00:00', 2),
+(276, 'सर्वहारा नेतृत्वको प्रश्न', 'http://www.ratopati.com/2014/07/26/154094.html', '2014-07-26 00:00:00', 2),
+(277, 'राजमार्गमा सुतिरहेका १२ तीर्थयात्रीलाई ट्रकले किच्यो', 'http://www.ratopati.com/2014/07/29/154971.html', '2014-07-29 00:00:00', 2),
+(278, 'भारतको कोलकातामा भानुभक्तको सालिक स्थापना गरिने', 'http://www.ratopati.com/2014/07/26/154113.html', '2014-07-26 00:00:00', 2),
+(279, 'बाल्टिमोरमा खड्ग गर्बुजाको गीत सुन्न ६ सय नेपाली भेला ', 'http://www.ratopati.com/2014/07/23/153418.html', '2014-07-23 00:00:00', 2),
+(280, 'अनिशालाई साउनदेखि नै तीजको रन्को', 'http://www.ratopati.com/2014/07/19/152465.html', '2014-07-19 00:00:00', 2),
+(281, 'म्युजिक भिडियोमा काम गर्न चाहन्छिन् रेश्मा (फोटोफिचर)', 'http://www.ratopati.com/2014/07/06/149285.html', '2014-07-06 00:00:00', 2),
+(282, 'हिलोमा लुट्पुटिँदै हिरोइन (फोटोफिचर)', 'http://www.ratopati.com/2014/06/29/147465.html', '2014-06-29 00:00:00', 2),
+(283, 'नायिका बिनिता घिमिरेको बोल्ड अवतार', 'http://www.ratopati.com/2014/06/27/146975.html', '2014-06-27 00:00:00', 2),
+(284, 'ग्ल्यामरस् सविना कार्की (फोटोफिचर)', 'http://www.ratopati.com/2014/06/18/144793.html', '2014-06-18 00:00:00', 2),
+(285, 'तस्विरमा हट रिया (फोटोफिचर)', 'http://www.ratopati.com/2014/06/08/135453.html', '2014-06-08 00:00:00', 2),
+(286, 'सेक्सी महिलाको उपाधि जितेको खुसीयालीमा सेक्सी फोटोसुट', 'http://www.ratopati.com/2014/06/05/134810.html', '2014-06-05 00:00:00', 2),
+(287, 'गर्मी भगाउन नांगिइन् रोजलिन', 'http://www.ratopati.com/2014/06/04/134570.html', '2014-06-04 00:00:00', 2),
+(288, 'अष्ट्रेलियाकी मोडलको बिकिनी पोज', 'http://www.ratopati.com/2014/05/31/133590.html', '2014-05-31 00:00:00', 2),
+(289, 'साडीमा सजिएकी नेपाली चेलीलाई भेटेर जोन केरीले भने, ‘म नेपाल आउन चाहन्छु’', 'http://www.ratopati.com/2014/07/22/153294.html', '2014-07-22 00:00:00', 2),
+(290, 'कोलोराडोको बनभोजमा फेवातालको सम्झना', 'http://www.ratopati.com/2014/07/22/153071.html', '2014-07-22 00:00:00', 2),
+(291, 'लन्डन अन्तराष्ट्रिय तेक्वान्दोको प्रतियोगिताको तयारी अन्तिम अवस्थामा ', 'http://www.ratopati.com/2014/07/21/152786.html', '2014-07-21 00:00:00', 2),
+(292, 'प्रेमराजाको उपहारले अमेरिका र युरोपमा तहल्का', 'http://www.ratopati.com/2014/07/20/152565.html', '2014-07-20 00:00:00', 2),
+(293, 'म्यानमारमा कफ्र्यु घट्यो', 'http://www.ratopati.com/2014/07/29/154969.html', '2014-07-29 00:00:00', 2),
+(294, 'जब आपत्तिजनक अवस्थामा बाबुले छोरीलाई प्रेमीसँग देखे…', 'http://www.ratopati.com/2014/07/29/154952.html', '2014-07-29 00:00:00', 2),
+(295, 'इजरायलले गाजामा जाति हत्या गरिरहेको छः इरानी नेता खामेनी', 'http://www.ratopati.com/2014/07/29/154925.html', '2014-07-29 00:00:00', 2),
+(296, 'जापानमा तातो हावाका कारण पन्ध्रको मृत्यु, हजारौँ अस्पताल भर्ना', 'http://www.ratopati.com/2014/07/29/154921.html', '2014-07-29 00:00:00', 2),
+(297, 'झलनाथलाई फेरि अर्को झमेला', 'http://www.ratopati.com/2014/07/30/155045.html', '2014-07-30 00:00:00', 2),
+(298, 'पारसले बनाए यस्तो प्लान', 'http://www.ratopati.com/2014/07/30/155039.html', '2014-07-30 00:00:00', 2),
+(299, 'सुरक्षा मागेको तीन दिन नबित्दै हत्या', 'http://www.ratopati.com/2014/07/30/155035.html', '2014-07-30 00:00:00', 2),
+(300, 'आधा बाटो हिँडेपछि भाग्यसँग भेट भयो ………..', 'http://www.ratopati.com/2014/07/30/155043.html', '2014-07-30 00:00:00', 2),
+(301, 'कुकुरले बनायो यसरी लखपति', 'http://www.ratopati.com/2014/07/30/155024.html', '2014-07-30 00:00:00', 2),
+(302, 'केटो मात्तियपछि रेखा रनन', 'http://www.ratopati.com/2014/07/30/155041.html', '2014-07-30 00:00:00', 2),
+(303, 'पुरुष पनि महिनावारीको पिडाले ग्रस्त', 'http://www.ratopati.com/2014/07/28/154650.html', '2014-07-28 00:00:00', 2),
+(304, '१२ छोराछोरीकी आमा युवा प्रेमीसँग टाप', 'http://www.ratopati.com/2014/07/27/154382.html', '2014-07-27 00:00:00', 2),
+(305, 'योनीमा दश वर्षसम्म फस्यो सेक्स टोय', 'http://www.ratopati.com/2014/07/27/154386.html', '2014-07-27 00:00:00', 2),
+(306, 'बलात्कारीलाई जलाइदिने ब्रा', 'http://www.ratopati.com/2014/07/25/154001.html', '2014-07-25 00:00:00', 2),
+(307, 'भिख माग्दै गरेका करोडपती पक्राउ', 'http://www.ratopati.com/2014/07/24/153675.html', '2014-07-24 00:00:00', 2),
+(308, 'नाबालकलाई सुरक्षा दिँदै किंग कोब्रा (भिडियोसहित)', 'http://www.ratopati.com/2014/07/23/153529.html', '2014-07-23 00:00:00', 2),
+(309, '‘साइनोका धेरै तूनामा बाँधिएको साइनोभित्रको मान्छे’ (समिक्षा)', 'http://www.ratopati.com/2014/07/29/154816.html', '2014-07-29 00:00:00', 2),
+(310, 'भित्तामा पहाड टाँगेर कविताको खोजी', 'http://www.ratopati.com/2014/07/27/154323.html', '2014-07-27 00:00:00', 2),
+(311, 'दीपशिखाको ‘रात फुलेको याम’ बजारमा', 'http://www.ratopati.com/2014/07/26/154271.html', '2014-07-26 00:00:00', 2),
+(312, 'सात साहित्यकार सम्मानित', 'http://www.ratopati.com/2014/07/22/153129.html', '2014-07-22 00:00:00', 2),
+(313, 'हाम्रो भाषा र आदिकवि भानुभक्त', 'http://www.ratopati.com/2014/07/17/151964.html', '2014-07-17 00:00:00', 2),
+(314, 'सडक छेउ गाईवस्तु बाँध्नाले दुर्घटनामा वृद्धि', 'http://www.ratopati.com/2014/07/30/155194.html', '2014-07-30 00:00:00', 2),
+(315, 'नेपालमा २२ हजार ९९४ एचआइभी/एड्सबाट सङ्क्रमित', 'http://www.ratopati.com/2014/07/30/155192.html', '2014-07-30 00:00:00', 2),
+(316, 'पूर्व मुख्यसचिव रिमालको निधन', 'http://www.ratopati.com/2014/07/30/155162.html', '2014-07-30 00:00:00', 2),
+(317, 'रिम्पोछेको पार्थिव शरीर सर्वसाधारणका लागि दर्शन खुला', 'http://www.ratopati.com/2014/07/30/155160.html', '2014-07-30 00:00:00', 2),
+(318, 'जथाभावी विषादीको बिक्री वितरण नगर्न चेतावनी', 'http://www.ratopati.com/2014/07/30/155158.html', '2014-07-30 00:00:00', 2),
+(319, 'भ्यागुताको भव्य रुपमा विवाह सम्पन्न', 'http://www.ratopati.com/2014/07/30/155155.html', '2014-07-30 00:00:00', 2),
+(320, 'शिशु हराएको समाचार निराधार', 'http://www.ratopati.com/2014/07/30/155149.html', '2014-07-30 00:00:00', 2),
+(321, 'बहुलाहा स्यालको टोकाइबाट पाँच घाइते, त्रासका कारण विद्यालय बन्द', 'http://www.ratopati.com/2014/07/30/155141.html', '2014-07-30 00:00:00', 2),
+(322, 'रक्त सङ्कलन गर्ने योजना', 'http://www.ratopati.com/2014/07/30/155128.html', '2014-07-30 00:00:00', 2),
+(323, 'डुबेर बालकको मृत्यु', 'http://www.ratopati.com/2014/07/30/155126.html', '2014-07-30 00:00:00', 2),
+(324, 'विवाद समाधान गर्न बसेको एमाओवादीको ‘निर्णायक बैठक’ जहाँकोत्यहीँ', 'http://www.ratopati.com/2014/07/29/154974.html', '2014-07-29 00:00:00', 2),
+(325, 'भारतसितको ऊर्जा सम्झौतामा ‘सहमत’ नरहेको माओवादीको स्पष्टोक्ति', 'http://www.ratopati.com/2014/07/29/154928.html', '2014-07-29 00:00:00', 2),
+(326, 'नेपालको आन्तरिक राजनीतिकको विषयमा मोदीसँग कुरा गर्नै हुँदैन :थापा', 'http://www.ratopati.com/2014/07/29/154919.html', '2014-07-29 00:00:00', 2),
+(327, 'मोदीको भ्रमणलाई राष्ट्रिय हितमा उपयोग गर्न काँग्रेस पदाधिकारीको सुझाव', 'http://www.ratopati.com/2014/07/29/154940.html', '2014-07-29 00:00:00', 2),
+(328, 'रिम्पोचेको शब नेपाल ल्याउन ‘ससर्त’ अनुमति', 'http://www.ratopati.com/2014/07/29/154857.html', '2014-07-29 00:00:00', 2),
+(329, 'माघ ८ पछि एमालेको नेतृत्वमा नयाँ सरकार: ओली', 'http://www.ratopati.com/2014/07/29/154880.html', '2014-07-29 00:00:00', 2),
+(330, 'आपूर्तिको काठमा डिएफओ मालामाल', 'http://www.ratopati.com/2014/07/29/154836.html', '2014-07-29 00:00:00', 2),
+(331, 'विवाद समाधान गर्न एमाओवादीको बैठक बस्दै', 'http://www.ratopati.com/2014/07/29/154831.html', '2014-07-29 00:00:00', 2),
+(332, 'उपचार गराएर ओली स्वदेश फर्किँदै', 'http://www.ratopati.com/2014/07/29/154871.html', '2014-07-29 00:00:00', 2),
+(333, 'विद्यार्थिहरुको सिस्टि जुलुस', 'http://www.ratopati.com/2014/07/29/154750.html', '2014-07-29 00:00:00', 2),
+(334, 'सन्नीको पिंक लिप्स पती ड्यानियलको लागि मात्र (फोटोफिचर)', 'http://www.ratopati.com/2014/07/25/154016.html', '2014-07-25 00:00:00', 2),
+(335, '‘मेरी कोम’ को लागि तालु हुनु गौरबको कुरा थियोः प्रियंका चोपडा', 'http://www.ratopati.com/2014/07/25/153934.html', '2014-07-25 00:00:00', 2),
+(336, 'झलकको मञ्चमा गर्भवती रानीको झलक', 'http://www.ratopati.com/2014/07/24/153757.html', '2014-07-24 00:00:00', 2),
+(337, 'सोहाले गरिन् कुनालसँग इन्गेजमेन्ट', 'http://www.ratopati.com/2014/07/24/153754.html', '2014-07-24 00:00:00', 2),
+(338, 'जिउँदै जलाइएकी रिहानाको फोटो सर्वोत्कृष्ट (फोटोफिचर)', 'http://www.ratopati.com/2014/07/24/153636.html', '2014-07-24 00:00:00', 2),
+(339, 'सुनिल थापा बने प्रियंकाको बक्सिङ गुरु (भिडियो सहित)', 'http://www.ratopati.com/2014/07/23/153515.html', '2014-07-23 00:00:00', 2),
+(340, 'पी.के. का लागि आमिर भए नग्न, प्रशंसक हैरान', 'http://www.ratopati.com/2014/07/23/153501.html', '2014-07-23 00:00:00', 2),
+(341, 'सलमानकी हिरोइन रम्भामाथि दाइजो उत्पीडनको आरोप', 'http://www.ratopati.com/2014/07/23/153430.html', '2014-07-23 00:00:00', 2),
+(342, '“मिस्टर हेन्डसम नेपाल २०१४”को आवेदन फारम खुल्ला', 'http://www.ratopati.com/2014/07/23/153470.html', '2014-07-23 00:00:00', 2),
+(343, 'शकिरा दोस्रो पटक गर्भवती', 'http://www.ratopati.com/2014/07/22/153314.html', '2014-07-22 00:00:00', 2),
+(344, 'छवटा लघु जलविद्युत् आयोजना बन्द', 'http://www.ratopati.com/2014/07/30/155227.html', '2014-07-30 00:00:00', 2),
+(345, 'विराटनगरका उद्योगपति भन्छन्–मोदीको भ्रमणमा उपलब्धिमूलक सम्झौता हुनुपर्ने', 'http://www.ratopati.com/2014/07/30/155144.html', '2014-07-30 00:00:00', 2),
+(346, 'बलियो डलरले सुनको भाउ ओरालो', 'http://www.ratopati.com/2014/07/29/154877.html', '2014-07-29 00:00:00', 2),
+(347, 'नोकियाको घाटा रोक्ने माइक्रोसफ्को योजना', 'http://www.ratopati.com/2014/07/29/154868.html', '2014-07-29 00:00:00', 2),
+(348, 'नुवाकोटमा ग्लोबल आइएमई बैंक', 'http://www.ratopati.com/2014/07/29/154840.html', '2014-07-29 00:00:00', 2),
+(349, 'एनएमबी र कुवेतको जोयलुकासबीच सम्झौता', 'http://www.ratopati.com/2014/07/29/154848.html', '2014-07-29 00:00:00', 2),
+(350, 'स्प्रिङउडका साम्रगीमा छुट', 'http://www.ratopati.com/2014/07/29/154844.html', '2014-07-29 00:00:00', 2),
+(351, 'सरकारी दस्तुरसँगै अब तरकारी दस्तुर पनि', 'http://www.ratopati.com/2014/07/29/154967.html', '2014-07-29 00:00:00', 2),
+(352, 'मर्मतपछि ३४ वर्ष पुरानो विद्युत् गृह सुचारु', 'http://www.ratopati.com/2014/07/29/154965.html', '2014-07-29 00:00:00', 2),
+(353, 'वीरगन्जका व्यापारीलाई मसला बेच्न भ्याइ–नभ्याई', 'http://www.ratopati.com/2014/07/29/154963.html', '2014-07-29 00:00:00', 2),
+(354, 'दोस्रो नेपाल कप फुटबल हुँदै', 'http://www.ratopati.com/2014/07/24/153615.html', '2014-07-24 00:00:00', 2),
+(355, 'विश्वकै चौंथो महंगो खेलाडी बन्दै रोड्रिगेज रियल म्याड्रिडसँग अनुबन्ध', 'http://www.ratopati.com/2014/07/22/153311.html', '2014-07-22 00:00:00', 2),
+(356, 'जेरार्डद्वारा सन्यासको घोषणा', 'http://www.ratopati.com/2014/07/22/153114.html', '2014-07-22 00:00:00', 2),
+(357, 'रोड्रिगेजको गोल विश्वकपकै उत्कृष्ट गोल छनौट', 'http://www.ratopati.com/2014/07/22/153111.html', '2014-07-22 00:00:00', 2),
+(358, 'गौतम बुद्ध अन्तराष्ट्रिय क्रिकेट प्रतियोगिता हुँदै', 'http://www.ratopati.com/2014/07/21/153053.html', '2014-07-21 00:00:00', 2),
+(359, 'नेग्रेडोको खुट्टा भाँचियो', 'http://www.ratopati.com/2014/07/21/153024.html', '2014-07-21 00:00:00', 2),
+(360, 'साख्तार डोनेस्कका ६ खेलाडीले युक्रेन फर्कन मानेनन्', 'http://www.ratopati.com/2014/07/21/153012.html', '2014-07-21 00:00:00', 2),
+(361, 'आफू बसेको पाँच तारे होटलमा भूत भएको इंगल्याण्डका क्रिकेटरको दाबी', 'http://www.ratopati.com/2014/07/21/152879.html', '2014-07-21 00:00:00', 2),
+(362, 'आर्थिक अनियमिततामा मुछिएका गणेश थापाबिरुद्द लेखा समितिले थाल्यो छानबिन', 'http://www.ratopati.com/2014/07/20/152678.html', '2014-07-20 00:00:00', 2),
+(363, 'विश्वकप जित्ने जर्मन फुटबलरले ब्राजिललाई दान दिए आफ्नो २४ करोडको इनाम', 'http://www.ratopati.com/2014/07/18/152266.html', '2014-07-18 00:00:00', 2),
+(364, '‘आइफोनको प्रयोग खतरापूर्ण’', 'http://www.ratopati.com/2014/07/13/151015.html', '2014-07-13 00:00:00', 2),
+(365, 'माउसलाई विस्थापित गर्न आउँदैछ नयाँ यन्त्र', 'http://www.ratopati.com/2014/07/11/150582.html', '2014-07-11 00:00:00', 2),
+(366, 'कस्ता स्मार्टफोन बोक्छन् विश्वका चर्चित नेताहरु', 'http://www.ratopati.com/2014/07/09/149950.html', '2014-07-09 00:00:00', 2),
+(367, 'आइफोन ‘सिक्स’ को स्क्रिनमा चक्कुको हमलापनि बेकार (भिडियोसहित)', 'http://www.ratopati.com/2014/07/09/149933.html', '2014-07-09 00:00:00', 2),
+(368, 'प्रेम सम्बन्धका लागि ठिक छैन ट्विटर', 'http://www.ratopati.com/2014/07/08/149676.html', '2014-07-08 00:00:00', 2),
+(369, 'फेसबुकमा कहिल्यै पोष्ट गर्न नुहने पाँच कुरा', 'http://www.ratopati.com/2014/07/07/149441.html', '2014-07-07 00:00:00', 2),
+(370, 'गुगलले पोर्न विज्ञापन बन्द गर्ने', 'http://www.ratopati.com/2014/07/04/148656.html', '2014-07-04 00:00:00', 2),
+(371, 'फेसबुकले अनुसन्धान भन्दै गर्यो तपाईंको भावनासँग खेलवाड', 'http://www.ratopati.com/2014/07/01/147915.html', '2014-07-01 00:00:00', 2),
+(372, 'तपाईंलाई ‘स्पाइडरम्यान’ बनाइदिन्छ यो ट्राउजरले', 'http://www.ratopati.com/2014/06/30/147672.html', '2014-06-30 00:00:00', 2),
+(373, '‘आइफोन सिक्स’ को मूल्य आइफोन ‘फाइभ–एस’ भन्दा कम', 'http://www.ratopati.com/2014/06/29/147311.html', '2014-06-29 00:00:00', 2),
+(374, 'ओली–नेपाल ‘हाफ–हाफ’ मान्छे, दुई मिले एमाले सशक्त बन्छः राधाकृष्ण मैनाली', 'http://www.ratopati.com/2014/06/30/147590.html', '2014-06-30 00:00:00', 2),
+(375, 'गिरिजाबाबुको सत्तामोहले मुलुक विदेशीको चंगुलमा फस्यो : प्रकाश कोइराला', 'http://www.ratopati.com/2014/06/25/146372.html', '2014-06-25 00:00:00', 2),
+(376, 'न्यायालय होइन न्यायाधीसलाई बचाउन विधेयक ल्याइँदैछः शिव गाउँले', 'http://www.ratopati.com/2014/06/22/145779.html', '2014-06-22 00:00:00', 2),
+(377, 'म बिरामी भएर अस्पताल लागेपछि अनेकौं खेल शुरु भएः केपी ओली', 'http://www.ratopati.com/2014/06/20/145342.html', '2014-06-20 00:00:00', 2),
+(378, 'सुनको डल्लालाई नेताहरुले खिया लागेको फलाम बनाइदिए: उमेश श्रेष्ठ', 'http://www.ratopati.com/2014/06/20/145205.html', '2014-06-20 00:00:00', 2),
+(379, 'ला, नेपालमा त संविधान नै छैन भनेर टेन्सन हुन्छः एसएलसी टपर संजोग कार्की', 'http://www.ratopati.com/2014/06/16/144351.html', '2014-06-16 00:00:00', 2),
+(380, 'सबैले अधिकार खोजे तर आफ्नो कर्तव्य बिर्सेः कुश कुमार जोशी', 'http://www.ratopati.com/2014/06/09/135957.html', '2014-06-09 00:00:00', 2),
+(381, 'बाबुरामजीको भनाइ र गराइ डबल स्ट्यान्डर्ड भयो: वर्षमान पुन', 'http://www.ratopati.com/2014/06/05/134916.html', '2014-06-05 00:00:00', 2),
+(382, 'केपी ओलीलाई अध्यक्ष बनाउँदा नेतृत्व हस्तान्तरण सहज हुन्छः शंकर पोखरेल', 'http://www.ratopati.com/2014/06/03/134305.html', '2014-06-03 00:00:00', 2),
+(383, '१२ बुँदेको मस्यौदा मैले तयार गरेको थिएँः नारायणकाजी श्रेष्ठ ‘प्रकाश’', 'http://www.ratopati.com/2014/05/29/133165.html', '2014-05-29 00:00:00', 2),
+(384, 'सुन्तलाको बोक्रा फाल्नुहुन्छ ? अब नफाल्नुहोस्', 'http://www.ratopati.com/2014/07/22/153235.html', '2014-07-22 00:00:00', 2),
+(385, 'बढ्दो तौल र बाहिर निस्किएको पेटबाट तनावमा हुनुहुन्छ भने यी तरिका अपनाउनुहोस्', 'http://www.ratopati.com/2014/07/22/153223.html', '2014-07-22 00:00:00', 2),
+(386, 'मेहेन्दी लगाइनुका प्रमुख कारणहरु', 'http://www.ratopati.com/2014/07/21/152953.html', '2014-07-21 00:00:00', 2),
+(387, 'नकारात्मक सोच भएका व्यक्तिसँग कसरी व्यवहार गर्ने ?', 'http://www.ratopati.com/2014/07/21/152941.html', '2014-07-21 00:00:00', 2),
+(388, 'के हो साउने सोमबारको महत्व ?', 'http://www.ratopati.com/2014/07/21/152864.html', '2014-07-21 00:00:00', 2),
+(389, 'दालचिनी एक प्राकृतिक एन्टिबायोटिक', 'http://www.ratopati.com/2014/07/20/152653.html', '2014-07-20 00:00:00', 2),
+(390, 'कम उचाईका पुरुषहरु बढि सेक्सुअल', 'http://www.ratopati.com/2014/07/20/152606.html', '2014-07-20 00:00:00', 2),
+(391, 'यसरी पट्टिन्छन् केटाहरु', 'http://www.ratopati.com/2014/07/19/152507.html', '2014-07-19 00:00:00', 2),
+(392, 'गोलभेडाको पेष्टले महँगो गहना र भाँडाकुँडा सफा गर्ने तरिका', 'http://www.ratopati.com/2014/07/18/152270.html', '2014-07-18 00:00:00', 2),
+(393, 'क्यान्सरबाट बच्नु छ भने विवाह गर्नुहोस्', 'http://www.ratopati.com/2014/07/18/152222.html', '2014-07-18 00:00:00', 2),
+(394, 'मोदी, जलस्रोत र नेपाल—भारत', 'http://www.ratopati.com/2014/07/25/153955.html', '2014-07-25 00:00:00', 2),
+(395, 'रोगी नेता, रोगी समाज', 'http://www.ratopati.com/2014/07/25/153886.html', '2014-07-25 00:00:00', 2),
+(396, 'नेताको उपचारमा खेर गएको ५० करोडले देशमा के गर्न सकिन्थ्यो ?', 'http://www.ratopati.com/2014/07/24/153758.html', '2014-07-24 00:00:00', 2),
+(397, 'बीपीको नाम किन बेच्दैछन् रामचन्द्र ?', 'http://www.ratopati.com/2014/07/24/153685.html', '2014-07-24 00:00:00', 2),
+(398, 'सरकारी अनियमितता बारे समाचार लेख्दा म यसरी विस्थापित भएँ', 'http://www.ratopati.com/2014/07/23/153541.html', '2014-07-23 00:00:00', 2);
+INSERT INTO `mainapp_post` (`id`, `title`, `url`, `created_at`, `site_id`) VALUES
+(399, 'इजरायलमा रहेका नेपालीको चिठ्ठी', 'http://www.ratopati.com/2014/07/23/153455.html', '2014-07-23 00:00:00', 2),
+(400, 'भर्ती अवैध, सम्बन्ध वैध ?', 'http://www.ratopati.com/2014/07/23/153448.html', '2014-07-23 00:00:00', 2),
+(401, 'अरुणले भगवानसँग चार दिन मागेका थिएः प्रकाश सायमी', 'http://www.ratopati.com/2014/07/21/152873.html', '2014-07-21 00:00:00', 2),
+(402, 'किन भएन अरुण थापा र प्रेमिका विमलाको मिलन ?', 'http://www.ratopati.com/2014/07/21/152865.html', '2014-07-21 00:00:00', 2),
+(403, 'सरकारी उपेक्षाको शिकार बन्दै शिक्षा क्षेत्र', 'http://www.ratopati.com/2014/07/20/152582.html', '2014-07-20 00:00:00', 2),
+(404, 'सुपरमोडलको स्विमिङपुलमा सेक्सी सुट', 'http://www.ratopati.com/2014/05/28/132891.html', '2014-05-28 00:00:00', 2),
+(405, 'दुर्घटनावश फुस्किएको बिकिनी सम्हाल्न जेनिफरलाई पर्यो धौ धौ', 'http://www.ratopati.com/2014/05/26/132455.html', '2014-05-26 00:00:00', 2),
+(406, 'हेलेन फ्लानागन चम्किइन् हरियो बिकिनीमा', 'http://www.ratopati.com/2014/05/24/131750.html', '2014-05-24 00:00:00', 2),
+(407, 'स्मारिकाको कसैसँग लभ परेन', 'http://www.ratopati.com/2014/05/22/131346.html', '2014-05-22 00:00:00', 2),
+(408, 'रोजीको सेक्सी फेसन सुट', 'http://www.ratopati.com/2014/05/22/131224.html', '2014-05-22 00:00:00', 2),
+(409, 'नग्न रोनाल्डो प्रेमिकाको पछाडी', 'http://www.ratopati.com/2014/05/20/130812.html', '2014-05-20 00:00:00', 2),
+(410, 'बेल्लाको बिकिनी बेला', 'http://www.ratopati.com/2014/05/19/130604.html', '2014-05-19 00:00:00', 2),
+(411, 'एफएचएमका लागि जेसिकाको सेक्सी फोटोसुट', 'http://www.ratopati.com/2014/05/14/129451.html', '2014-05-14 00:00:00', 2),
+(412, 'ब्याकस्टेज रोमान्स', 'http://www.ratopati.com/2014/05/13/129248.html', '2014-05-13 00:00:00', 2),
+(413, 'एउटै शहरमा एकातिर पूर्व प्रेमी गाउँदै अर्कोतिर प्रेमिका मोडल प्रेमीसँग रोमान्स गर्दै', 'http://www.ratopati.com/2014/05/11/128759.html', '2014-05-11 00:00:00', 2),
+(414, 'अमेरिकामा को–कोलाई भेटे प्रधानमन्त्रीले ?', 'http://www.ratopati.com/2014/07/18/152339.html', '2014-07-18 00:00:00', 2),
+(415, 'विदेशी नेपालीहरुको मताधिकार बारे एनआरएन बेल्जियमले गर्यो अन्तरकृया', 'http://www.ratopati.com/2014/07/17/152126.html', '2014-07-17 00:00:00', 2),
+(416, 'अमेरिकाबाट निर्वाचन आयोगले मताधिकार बारे सुझाब संकलन सुरु', 'http://www.ratopati.com/2014/07/17/151954.html', '2014-07-17 00:00:00', 2),
+(417, 'अमेरिकावासीलाई प्रेमराजाको सुझाव– ‘स्वीजरल्याण्ड होइन, नेपाल घुम्न जाऊ’', 'http://www.ratopati.com/2014/07/16/151776.html', '2014-07-16 00:00:00', 2),
+(418, 'मुम्बईमा भव्यताका साथ मनाइयो भानु जयन्ती', 'http://www.ratopati.com/2014/07/14/151478.html', '2014-07-14 00:00:00', 2),
+(419, 'कराते प्रशिक्षक लामा संचार माध्यमका प्रमुखमा मनोनित', 'http://www.ratopati.com/2014/07/13/150954.html', '2014-07-13 00:00:00', 2),
+(420, 'अन्तर्राष्ट्रिय ​नेपाली नारी लेखन मंचको प्रथम कार्यक्रम सम्पन्न', 'http://www.ratopati.com/2014/07/12/150681.html', '2014-07-12 00:00:00', 2),
+(421, 'अमेरिकाको ‘मिस्टर एण्ड मिस ए एन ए’ को ताज यादव र श्रेष्ठलाई', 'http://www.ratopati.com/2014/07/11/150430.html', '2014-07-11 00:00:00', 2),
+(422, 'अमेरिकामा प्रतिभा प्रतियोगिता सम्पन्न', 'http://www.ratopati.com/2014/07/10/150279.html', '2014-07-10 00:00:00', 2),
+(423, 'साउदीमा ८ नेपाली कामदार अलपत्र', 'http://www.ratopati.com/2014/07/10/150153.html', '2014-07-10 00:00:00', 2),
+(424, 'सांसदको घरमा गोलीहानी छ जनाको हत्या', 'http://www.ratopati.com/2014/07/29/154931.html', '2014-07-29 00:00:00', 2),
+(425, 'गाजामा पाँच इजरायली सैनिकको मृत्यु', 'http://www.ratopati.com/2014/07/29/154927.html', '2014-07-29 00:00:00', 2),
+(426, 'बन्दुक देखाउँदै पुलिससहितले गरे छात्रामाथि सामूहिक बलात्कार', 'http://www.ratopati.com/2014/07/29/154904.html', '2014-07-29 00:00:00', 2),
+(427, 'कारबाहीमा दशजना तालिवानको मृत्यु', 'http://www.ratopati.com/2014/07/28/154712.html', '2014-07-28 00:00:00', 2),
+(428, 'तेल बोक्ने ट्याङ्करमा आगजनी', 'http://www.ratopati.com/2014/07/28/154700.html', '2014-07-28 00:00:00', 2),
+(429, 'एम्बुसमा पारी १६ को हत्या', 'http://www.ratopati.com/2014/07/28/154690.html', '2014-07-28 00:00:00', 2),
+(430, 'पूरै कपडा खोलेर महिलाको गरियो खानतलासी', 'http://www.ratopati.com/2014/07/28/154594.html', '2014-07-28 00:00:00', 2),
+(431, 'श्रीमानको अगाडि नै अपहरण गरि हत्या', 'http://www.ratopati.com/2014/07/28/154606.html', '2014-07-28 00:00:00', 2),
+(432, 'हमासद्वारा युद्ध विरामको घोषणा', 'http://www.ratopati.com/2014/07/27/154492.html', '2014-07-27 00:00:00', 2),
+(433, 'आक्रमणमा दुई सैनिक र दश आतङ्ककारीको मृत्यु', 'http://www.ratopati.com/2014/07/27/154487.html', '2014-07-27 00:00:00', 2),
+(434, 'श्रीकृष्ण बिरामी हुँदा आकाशलाई तनाव', 'http://www.ratopati.com/2014/07/29/154802.html', '2014-07-29 00:00:00', 2),
+(435, 'पोलिटब्युरोमा ‘ओली पक्ष कमजोर’', 'http://www.ratopati.com/2014/07/29/154800.html', '2014-07-29 00:00:00', 2),
+(436, 'यस्तो बन्दैछ राष्ट्रपति निवास', 'http://www.ratopati.com/2014/07/29/154777.html', '2014-07-29 00:00:00', 2),
+(437, '९ करोड लिटर तेल राखिएको लिबियाको तेल भण्डार जल्दै', 'http://www.ratopati.com/2014/07/29/154762.html', '2014-07-29 00:00:00', 2),
+(438, 'मोदीलाई प्रस्ताव गर्ने आयोजनै छैन', 'http://www.ratopati.com/2014/07/29/154759.html', '2014-07-29 00:00:00', 2),
+(439, 'कार्यकर्ता पढाउन एमाओवादीले बनायो पाठ्यक्रम', 'http://www.ratopati.com/2014/07/29/154757.html', '2014-07-29 00:00:00', 2),
+(440, 'पत्नी देहव्यापारमा लगाउनेलाई ११ वर्ष कैद', 'http://www.ratopati.com/2014/07/29/154755.html', '2014-07-29 00:00:00', 2),
+(441, 'अमेरिकी गुप्तचरीले प्रेस स्वतन्त्रता हनन', 'http://www.ratopati.com/2014/07/29/154789.html', '2014-07-29 00:00:00', 2),
+(442, 'दिबंगत खेलाडीको परिवार विचल्लीमा', 'http://www.ratopati.com/2014/07/29/154783.html', '2014-07-29 00:00:00', 2),
+(443, 'रेडियो स्टेशनमा ब्लुफिल्म धन्दा', 'http://www.ratopati.com/2014/07/29/154798.html', '2014-07-29 00:00:00', 2),
+(444, 'खुला समुद्र तटमा सेक्स गर्दा जेलको बास', 'http://www.ratopati.com/2014/07/23/153536.html', '2014-07-23 00:00:00', 2),
+(445, 'अब डिजेल–पेट्रोलको ‘नो टेन्सन’, उखुको रसले चल्छ गाडी', 'http://www.ratopati.com/2014/07/22/153269.html', '2014-07-22 00:00:00', 2),
+(446, 'सेक्ससँग जोडिएका हरेक जानकारी दिन सेक्स प्रदर्शनको तयारी', 'http://www.ratopati.com/2014/07/22/153205.html', '2014-07-22 00:00:00', 2),
+(447, '‘ओनियन नोटबुक’ – जसमा लेख्दा तपाईंको आँसु झर्छ (भिडियोसहित)', 'http://www.ratopati.com/2014/07/22/153187.html', '2014-07-22 00:00:00', 2),
+(448, 'फोटो हो या चित्र ? आफै छुट्याउनुहोस्', 'http://www.ratopati.com/2014/07/21/152962.html', '2014-07-21 00:00:00', 2),
+(449, 'कुकुरहरुको लागि पनि सार्वजनिक शौचालय', 'http://www.ratopati.com/2014/07/21/152955.html', '2014-07-21 00:00:00', 2),
+(450, 'महिलाको तिघ्रा छुँदा जागिर चट्', 'http://www.ratopati.com/2014/07/21/152893.html', '2014-07-21 00:00:00', 2),
+(451, 'एउटा पिज्जाको मूल्य एक करोड रुपैयाँ ?', 'http://www.ratopati.com/2014/07/20/152634.html', '2014-07-20 00:00:00', 2),
+(452, 'पतिको विर्यले पुर्यायो अस्पताल', 'http://www.ratopati.com/2014/07/17/152028.html', '2014-07-17 00:00:00', 2),
+(453, 'लिंगको लम्बाई बढाउनका लागि घर धितो', 'http://www.ratopati.com/2014/07/17/152036.html', '2014-07-17 00:00:00', 2),
+(454, 'भानु जयन्तीका अवसरमा साहित्यिक कार्यक्रम सम्पन्न', 'http://www.ratopati.com/2014/07/13/151028.html', '2014-07-13 00:00:00', 2),
+(455, 'हस्तक्षेपी साहित्यिक धारको प्रादुर्भाव (साहित्य)', 'http://www.ratopati.com/2014/07/12/150753.html', '2014-07-12 00:00:00', 2),
+(456, 'मायाको अर्थ आखिरमा के हो त ?', 'http://www.ratopati.com/2014/07/12/150728.html', '2014-07-12 00:00:00', 2),
+(457, 'राष्ट्रव्यापी तस्बिर तथा चित्रकला प्रतियोगिता', 'http://www.ratopati.com/2014/07/08/149719.html', '2014-07-08 00:00:00', 2),
+(458, 'शीर्षक नजुरेको सपना…', 'http://www.ratopati.com/2014/07/05/148891.html', '2014-07-05 00:00:00', 2),
+(459, '२४ स्रष्टालाई प्रतिभा पुरस्कार दिने सरकारको घोषणा', 'http://www.ratopati.com/2014/07/03/148486.html', '2014-07-03 00:00:00', 2),
+(460, 'साहित्कार प्रसार्इंको निधन', 'http://www.ratopati.com/2014/07/03/148356.html', '2014-07-03 00:00:00', 2),
+(461, 'गान्धीवादी नेताको ‘अँध्यारोबाट उज्यालोतीर’', 'http://www.ratopati.com/2014/07/02/148250.html', '2014-07-02 00:00:00', 2),
+(462, 'मन्त्री निधिद्वारा पुस्तक विमोचन', 'http://www.ratopati.com/2014/07/02/148180.html', '2014-07-02 00:00:00', 2),
+(463, 'किसानले धान, कविले कविता रोप्नुपर्छ: बैरागी काइँला', 'http://www.ratopati.com/2014/06/30/147785.html', '2014-06-30 00:00:00', 2),
+(464, 'खोलाले बगाएका चेपाङ मृत भेटिए, एकजनाको सकुशल उद्धार', 'http://www.ratopati.com/2014/07/30/155124.html', '2014-07-30 00:00:00', 2),
+(465, 'महिला सहभागिता बढाउन राजनीतिक दल उदासिन', 'http://www.ratopati.com/2014/07/30/155122.html', '2014-07-30 00:00:00', 2),
+(466, 'मेलम्ची सुरुङको मुहान क्षेत्रमा पाँच महिनादेखि निर्माण कार्य अवरुद्ध', 'http://www.ratopati.com/2014/07/30/155119.html', '2014-07-30 00:00:00', 2),
+(467, 'नाकामा सहयोग कक्ष स्थापना भएपछि लुटपाटमा कमी', 'http://www.ratopati.com/2014/07/30/155117.html', '2014-07-30 00:00:00', 2),
+(468, 'तेजाब परेर आँखा गुमाएका परियार आर्थिक अभावका कारण अलपत्र', 'http://www.ratopati.com/2014/07/30/155115.html', '2014-07-30 00:00:00', 2),
+(469, 'शान्ति प्रक्रिया भए यता कैलालीमा उद्योग दर्तामा बृद्धि', 'http://www.ratopati.com/2014/07/30/155111.html', '2014-07-30 00:00:00', 2),
+(470, 'स्वास्थ्यकर्मी ड्युटीमा नबस्दा म्याग्दी जिल्ला अस्पतालको सेवा प्रभावित', 'http://www.ratopati.com/2014/07/30/155093.html', '2014-07-30 00:00:00', 2),
+(471, 'ढुंगा बालुवा निकासीमा रोक लगाएपछि ट्रयाक्टर व्यवसायी आन्दोलित', 'http://www.ratopati.com/2014/07/30/155091.html', '2014-07-30 00:00:00', 2),
+(472, 'सञ्चालन नहुँदै भत्किएको पुल पुर्ननिर्माण नहुँदा स्थानीयलाई सास्ती', 'http://www.ratopati.com/2014/07/30/155083.html', '2014-07-30 00:00:00', 2),
+(473, 'भाला प्रहार गरी बुहारीको हत्या', 'http://www.ratopati.com/2014/07/30/155081.html', '2014-07-30 00:00:00', 2),
+(474, 'अदालतको अपहेलनासम्बन्धी विधेयक सार्वजनिक गर्ने सभामुखको घोषणा', 'http://www.ratopati.com/2014/07/28/154742.html', '2014-07-28 00:00:00', 2),
+(475, 'लेखा समिति सभापतिको निर्वाचन शुक्रबार', 'http://www.ratopati.com/2014/07/28/154738.html', '2014-07-28 00:00:00', 2),
+(476, 'नेपाल–भारत संयुक्त आयोगको बैठकको सहमति सदनलाई जानकारी गराउन निर्देशन', 'http://www.ratopati.com/2014/07/28/154736.html', '2014-07-28 00:00:00', 2),
+(477, 'ओली मङ्गलबार आउँदै', 'http://www.ratopati.com/2014/07/28/154682.html', '2014-07-28 00:00:00', 2),
+(478, 'जनाधार नभएका ३३ दलले विरोध गर्नुको औचित्य छैनः सिंह', 'http://www.ratopati.com/2014/07/28/154679.html', '2014-07-28 00:00:00', 2),
+(479, 'संयुक्त जातीय मोर्चासँग तीन बुँदे सहमति', 'http://www.ratopati.com/2014/07/28/154674.html', '2014-07-28 00:00:00', 2),
+(480, 'शासकीय स्वरुपको मतभेद जटिल बनाउने कांग्रेस–एमालेको योजनाः थापा', 'http://www.ratopati.com/2014/07/28/154668.html', '2014-07-28 00:00:00', 2),
+(481, 'अध्यक्ष ओली फर्केपछि सभासद् मनोनयन हुनेः उपप्रधानमन्त्री गौतम', 'http://www.ratopati.com/2014/07/28/154658.html', '2014-07-28 00:00:00', 2),
+(482, 'मोदीको भ्रमण सफल बनाउन तीन दलको बैठक', 'http://www.ratopati.com/2014/07/28/154643.html', '2014-07-28 00:00:00', 2),
+(483, 'हप्तादिन भित्रमा २६ सभासद्को टुंगो लाग्छः गौतम', 'http://www.ratopati.com/2014/07/28/154603.html', '2014-07-28 00:00:00', 2),
+(484, '‘आइरन म्यान’का रोबर्ट डाउनी जुनियर सबैभन्दा बढी आमदानी गर्ने अभिनेता', 'http://www.ratopati.com/2014/07/22/153206.html', '2014-07-22 00:00:00', 2),
+(485, 'टपलेस भएर माइलीले भनिन्, ‘म मरेकी छैन’', 'http://www.ratopati.com/2014/07/22/153221.html', '2014-07-22 00:00:00', 2),
+(486, 'आलियालाई आफ्नो बुवाजस्तो जीवनसाथी नचाहिने', 'http://www.ratopati.com/2014/07/21/153043.html', '2014-07-21 00:00:00', 2),
+(487, 'यी सुन्दरीहरुसँग अक्षयले गरे खुलेर रोमान्स', 'http://www.ratopati.com/2014/07/20/152739.html', '2014-07-20 00:00:00', 2),
+(488, 'फिल्मफेयर म्यागजिनमा दिपिकाको हट फोटोसुट (फोटोफिचर)', 'http://www.ratopati.com/2014/07/20/152707.html', '2014-07-20 00:00:00', 2),
+(489, 'पारिश्रमिक नपाएपछि कलाकारद्वारा सर्वोच्चमा आयोजकविरुद्ध मुद्दा हाल्ने धम्की', 'http://www.ratopati.com/2014/07/18/152296.html', '2014-07-18 00:00:00', 2),
+(490, 'कट्रिनाको जन्मदिनमा रणबिरले दिए यो ‘सरप्राइज’', 'http://www.ratopati.com/2014/07/17/152155.html', '2014-07-17 00:00:00', 2),
+(491, 'कट्रिना ३० पुगिन्, प्रेमी रणबिरसँग फ्रान्समा मनाउनेछिन् जन्मदिन', 'http://www.ratopati.com/2014/07/16/151864.html', '2014-07-16 00:00:00', 2),
+(492, 'चलचित्र ‘ठुली’ मा बालकलाकार कञ्चनको अभिनय', 'http://www.ratopati.com/2014/07/16/151801.html', '2014-07-16 00:00:00', 2),
+(493, 'चलचित्र क्षेत्रलाई मर्यादित बनाउन सरकार प्रतिबद्ध – मन्त्री रिजाल', 'http://www.ratopati.com/2014/07/15/151666.html', '2014-07-15 00:00:00', 2),
+(494, 'दुई करोडभन्दा बढीको मकैबाली सखाप', 'http://www.ratopati.com/2014/07/29/154961.html', '2014-07-29 00:00:00', 2),
+(495, 'लक्ष्यभन्दा बढी राजश्व संकलन', 'http://www.ratopati.com/2014/07/29/154878.html', '2014-07-29 00:00:00', 2),
+(496, 'सामसुङको सस्ता सेट बजारमा', 'http://www.ratopati.com/2014/07/28/154615.html', '2014-07-28 00:00:00', 2),
+(497, 'बिक्रीमा ग्लोबल आईएमईको सेयर', 'http://www.ratopati.com/2014/07/28/154618.html', '2014-07-28 00:00:00', 2),
+(498, 'राजमार्गमा ५८ लाखले खाना र खाजा खान्छन्', 'http://www.ratopati.com/2014/07/28/154710.html', '2014-07-28 00:00:00', 2),
+(499, 'कमैया दम्पती बने उद्योगपति', 'http://www.ratopati.com/2014/07/28/154708.html', '2014-07-28 00:00:00', 2),
+(500, 'अत्यधिक विषादीको प्रयोग रोक्न कृषि विज्ञको आग्रह', 'http://www.ratopati.com/2014/07/28/154706.html', '2014-07-28 00:00:00', 2),
+(501, 'तीन करोड बराबरको सम्झौता अलपत्र', 'http://www.ratopati.com/2014/07/28/154704.html', '2014-07-28 00:00:00', 2),
+(502, 'खाद्यवस्तुमा प्रयोग हुने विषादीले ६ प्रतिशत नेपालीमा क्यान्सर थपिँदै', 'http://www.ratopati.com/2014/07/28/154592.html', '2014-07-28 00:00:00', 2),
+(503, 'स्मार्टफोनका लागि स्मार्ट सोलुसन', 'http://www.ratopati.com/2014/07/28/154672.html', '2014-07-28 00:00:00', 2),
+(504, 'रंगशालाको प्याराफिट निर्माण', 'http://www.ratopati.com/2014/07/18/152179.html', '2014-07-18 00:00:00', 2),
+(505, 'रोमाञ्चक विश्वकप फाइनल (फोटोफिचर)', 'http://www.ratopati.com/2014/07/14/151216.html', '2014-07-14 00:00:00', 2),
+(506, 'आहा गोल्डमा ५० लाख खर्च', 'http://www.ratopati.com/2014/07/12/150743.html', '2014-07-12 00:00:00', 2),
+(507, 'सान्चेज आर्सनलसँग अनुबन्ध', 'http://www.ratopati.com/2014/07/11/150488.html', '2014-07-11 00:00:00', 2),
+(508, 'विश्वकप फुटबल : ब्राजिल र जर्मनी भिड्दै', 'http://www.ratopati.com/2014/07/07/149492.html', '2014-07-07 00:00:00', 2),
+(509, 'कप्तान र स्ट्राइकर नेमार नहुँदा सेमिफाइनल भिडन्तमा ब्राजिललाई समस्या', 'http://www.ratopati.com/2014/07/06/149206.html', '2014-07-06 00:00:00', 2),
+(510, 'न्युजिल्याण्डका पूर्व क्रिकेटर लु भिन्सेन्टलाई आजीवन प्रतिबन्ध', 'http://www.ratopati.com/2014/07/01/148003.html', '2014-07-01 00:00:00', 2),
+(511, 'प्रशिक्षक पुबुद्धुको करार एक वर्षका लागि थप', 'http://www.ratopati.com/2014/07/01/147941.html', '2014-07-01 00:00:00', 2),
+(512, 'अन्तरिक्षमा पाइयो पृथ्वीको आकारको हिरा', 'http://www.ratopati.com/2014/06/26/146604.html', '2014-06-26 00:00:00', 2),
+(513, 'महिलालाई बलात्कार र अपहरणबाट बचाउँछ यो जिन्सले', 'http://www.ratopati.com/2014/06/25/146374.html', '2014-06-25 00:00:00', 2),
+(514, 'फेसबुकको रङ निलो नै किन ?', 'http://www.ratopati.com/2014/06/22/145691.html', '2014-06-22 00:00:00', 2),
+(515, 'अब तपाईं पनि गर्नसक्नुहुनेछ पोष्ट मार्टम', 'http://www.ratopati.com/2014/06/20/145276.html', '2014-06-20 00:00:00', 2),
+(516, 'कुन तस्विर बन्यो आइफोन फोटोग्राफी अवार्डमा सर्वोत्कृष्ट ?', 'http://www.ratopati.com/2014/06/17/144785.html', '2014-06-17 00:00:00', 2),
+(517, 'फीफाको फ्यान हुनुहुन्छ ? डाउनलोड गर्नुहोस् यी एप्स', 'http://www.ratopati.com/2014/06/13/136878.html', '2014-06-13 00:00:00', 2),
+(518, '११ सेकेन्डमा पाँच जीबीको एचडी फिल्म डाउनलोड', 'http://www.ratopati.com/2014/06/12/136606.html', '2014-06-12 00:00:00', 2),
+(519, 'ग्याजेट चार्ज गर्ने वाटरप्रुफ स्पिकर', 'http://www.ratopati.com/2014/06/11/136310.html', '2014-06-11 00:00:00', 2),
+(520, 'सुटकेसमा कपडा प्याक गरि यसलाई चलाउँदै गन्तव्यमा जानुहोस्', 'http://www.ratopati.com/2014/06/07/135308.html', '2014-06-07 00:00:00', 2),
+(521, 'क्यान्सर पत्ता लगाउने स्मार्टफोन', 'http://www.ratopati.com/2014/06/06/135163.html', '2014-06-06 00:00:00', 2),
+(522, 'राजाले भेट्न चाहँदा पनि मैले भेटिन, मलाई दिएको टर्चरको बदला लिए: अमरेश सिंह', 'http://www.ratopati.com/2014/05/29/133015.html', '2014-05-29 00:00:00', 2),
+(523, 'पञ्चायतको जस्तै चुनाव भयोः डा. बाबुराम भट्टराई', 'http://www.ratopati.com/2014/05/27/132705.html', '2014-05-27 00:00:00', 2),
+(524, 'राजनीतिक भागबण्डाले अब न्यायालय पनि सिद्धिन्छः रमण श्रेष्ठ (अन्तरवार्ता)', 'http://www.ratopati.com/2014/05/23/131565.html', '2014-05-23 00:00:00', 2),
+(525, 'हामी गफै मात्र गर्ने काम नगर्ने : परराष्ट्रमन्त्री पाण्डे', 'http://www.ratopati.com/2014/05/18/130356.html', '2014-05-18 00:00:00', 2),
+(526, '२५ वर्षसम्म बाबुरामजी मेरो ‘यसम्यान’ थिए त ?: प्रचण्ड', 'http://www.ratopati.com/2014/05/10/128466.html', '2014-05-10 00:00:00', 2),
+(527, 'असन्तुष्ट बनेर हामी भागेर जाँदैनौं:टोपबहादुर रायमाझी', 'http://www.ratopati.com/2014/05/09/128260.html', '2014-05-09 00:00:00', 2),
+(528, 'हामीलाई पेलेर शान्ति प्रक्रिया अघि बढ्न सक्दैन: मोहन वैद्य ‘किरण’', 'http://www.ratopati.com/2014/04/25/125157.html', '2014-04-25 00:00:00', 2),
+(529, 'मलाई पक्रे भयो, किन फुजेलको बहानामा निर्दोषलाई दुःख दिनु ?: प्रचण्ड (अन्तरवार्ता)', 'http://www.ratopati.com/2014/04/16/123080.html', '2014-04-16 00:00:00', 2),
+(530, 'रोमियो अपरेसन चलाउनेले कसरी द्वन्द्व व्यवस्थापन गर्छ ?: एकराज भण्डारी', 'http://www.ratopati.com/2014/04/05/120829.html', '2014-04-05 00:00:00', 2),
+(531, 'अब दोस्रो तहका नेताहरुलाई कोर्रा हन्नुपर्छः गोपाल किराँती', 'http://www.ratopati.com/2014/03/29/119409.html', '2014-03-29 00:00:00', 2),
+(532, 'व्रतको महिना श्रावण नै किन ? थाहा पाउनुस् यो महिनाको महत्व', 'http://www.ratopati.com/2014/07/18/152229.html', '2014-07-18 00:00:00', 2),
+(533, 'गुप्ताङ्गको दुर्गन्धबाट पार पाउने घरेलु उपाय', 'http://www.ratopati.com/2014/07/17/152009.html', '2014-07-17 00:00:00', 2),
+(534, 'तनावमा हुनुहुन्छ ? चुम्बन गर्नुहोस्', 'http://www.ratopati.com/2014/07/16/151901.html', '2014-07-16 00:00:00', 2),
+(535, 'बोल्न अप्ठेरो लाग्छ भने यसरी भन्नुहोस् मनका कुरा', 'http://www.ratopati.com/2014/07/15/151703.html', '2014-07-15 00:00:00', 2),
+(536, 'शिवलाई साउन महिना नै किन प्रिय छ ?', 'http://www.ratopati.com/2014/07/15/151700.html', '2014-07-15 00:00:00', 2),
+(537, 'दिनमा १९ पटक सेक्सको बारेमा सोच्छन् पुरुष', 'http://www.ratopati.com/2014/07/14/151475.html', '2014-07-14 00:00:00', 2),
+(538, 'महिनावारी हुँदा हुने शारिरक परिवर्तन', 'http://www.ratopati.com/2014/07/14/151368.html', '2014-07-14 00:00:00', 2),
+(539, 'मोबाइल फोनको लतबाट कसरी छुटकारा पाउने ?', 'http://www.ratopati.com/2014/07/14/151321.html', '2014-07-14 00:00:00', 2),
+(540, 'आफन्तलाई कहिले नसोध्नुहोस् यी १० प्रश्नहरु', 'http://www.ratopati.com/2014/07/13/150981.html', '2014-07-13 00:00:00', 2),
+(541, 'स्याउले महिलाको यौन सन्तुष्टि बढाउन मद्दत गर्ने', 'http://www.ratopati.com/2014/07/12/150862.html', '2014-07-12 00:00:00', 2),
+(542, 'बजेटःहुनेलाई खातैखात नहुनेलाई रित्तो हात', 'http://www.ratopati.com/2014/07/19/152404.html', '2014-07-19 00:00:00', 2),
+(543, 'कुरीतिसँग जोडिएको कुपोषणको सम्बन्ध', 'http://www.ratopati.com/2014/07/18/152214.html', '2014-07-18 00:00:00', 2),
+(544, 'श्यामशरणले रिस फेर्दा राजसंस्था हट्यो', 'http://www.ratopati.com/2014/07/18/152209.html', '2014-07-18 00:00:00', 2),
+(545, 'एमाओवादी किन बोक्दैछ मधेशी दललाई ?', 'http://www.ratopati.com/2014/07/18/152207.html', '2014-07-18 00:00:00', 2),
+(546, 'बजेटका कुरा', 'http://www.ratopati.com/2014/07/18/152205.html', '2014-07-18 00:00:00', 2),
+(547, 'फेरिँदै पोखराको रुप', 'http://www.ratopati.com/2014/07/17/152065.html', '2014-07-17 00:00:00', 2),
+(548, 'यसरी फस्टाउँदै छ ठमेलमा यौन व्यवसाय', 'http://www.ratopati.com/2014/07/17/152020.html', '2014-07-17 00:00:00', 2),
+(549, 'यस्तो छ किस्ट कलेजको मनोमानी', 'http://www.ratopati.com/2014/07/15/151658.html', '2014-07-15 00:00:00', 2),
+(550, 'राज्य–समाज सम्बन्धका आधार', 'http://www.ratopati.com/2014/07/14/151504.html', '2014-07-14 00:00:00', 2),
+(551, 'गरीबलाई प्रलोभनमा पारेर यसरी फसाउँछन् क्रिश्चियनहरु', 'http://www.ratopati.com/2014/07/14/151428.html', '2014-07-14 00:00:00', 2);
 
 -- --------------------------------------------------------
 
@@ -2235,6 +2828,19 @@ ALTER TABLE `auth_user_user_permissions`
 ALTER TABLE `django_admin_log`
   ADD CONSTRAINT `content_type_id_refs_id_93d2d1f8` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   ADD CONSTRAINT `user_id_refs_id_c0d12874` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
+
+--
+-- Constraints for table `djcelery_periodictask`
+--
+ALTER TABLE `djcelery_periodictask`
+  ADD CONSTRAINT `crontab_id_refs_id_286da0d1` FOREIGN KEY (`crontab_id`) REFERENCES `djcelery_crontabschedule` (`id`),
+  ADD CONSTRAINT `interval_id_refs_id_1829f358` FOREIGN KEY (`interval_id`) REFERENCES `djcelery_intervalschedule` (`id`);
+
+--
+-- Constraints for table `djcelery_taskstate`
+--
+ALTER TABLE `djcelery_taskstate`
+  ADD CONSTRAINT `worker_id_refs_id_6fd8ce95` FOREIGN KEY (`worker_id`) REFERENCES `djcelery_workerstate` (`id`);
 
 --
 -- Constraints for table `mainapp_post`
