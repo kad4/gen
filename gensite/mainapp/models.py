@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class site(models.Model):
+class Site(models.Model):
 	name= models.CharField(max_length=30)
 	url= models.URLField()
 	rssurl= models.URLField()
@@ -11,18 +11,18 @@ class site(models.Model):
 	def __str__(self):
 		return self.name
 
-class post(models.Model):
+class Post(models.Model):
 	title= models.TextField()
 	url= models.URLField()
 	created_at= models.DateTimeField()
-	site= models.ForeignKey(site)
+	site= models.ForeignKey(Site)
 
 	def __str__(self):
 		return self.title
 
-class rating(models.Model):
+class Rating(models.Model):
 	user= models.ForeignKey(User)
-	post= models.ForeignKey(post)
+	post= models.ForeignKey(Post)
 	score= models.PositiveSmallIntegerField()
 
 

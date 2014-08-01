@@ -6,7 +6,8 @@ from django.db import connection
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 
-from mainapp.models import post,rating,site
+from mainapp.models import Post,Rating,Site
+from django.contrib.auth.models import User
 
 from datetime import datetime
 from random import sample,choice
@@ -93,7 +94,7 @@ def logout(request):
 
 @login_required(redirect_field_name='index')
 def home(request):
-	total_posts=post.objects.all().order_by('-created_at')
+	total_posts=Post.objects.all().order_by('-created_at')
 	paginator = Paginator(total_posts, 10)
 
 	page = request.GET.get('page')
@@ -109,14 +110,21 @@ def home(request):
 
 
 def ratepost(request):
-	users=user.objects.all()
-	posts=post.objects.all()
-	values=[0,1,2]
-	for user as users:
-		sample_posts= sample(posts,200)
-		for rate_post as sample_posts:
-			rating = choice(values)
-			new_rating = rating()
+	users=User.objects.all()
+	posts=Post.objects.all()
+	scores=[0,1,2]
+
+	user=choice(users)
+	post=choice(posts)
+	score=choice(scores)
+	new_rating=Rating(user_id=user.id,post_id=post.id,score=score)
+	new_rating.save()
+
+	# for user as users:
+	# 	sample_posts= sample(posts,200)
+	# 	for rate_post as sample_posts:
+	# 		rating = choice(values)
+	# 		new_rating = rating()
 
 
 	return HttpResponse('Rating Completed')
@@ -152,8 +160,8 @@ def crawlsite(request,id):
 		utc=pytz.UTC
 
 		for items in obj.Articles:
-			# new_post=post(title=items[0],created_at=utc.localize(datetime.strptime(items[1], "%Y-%m-%d")),url=items[2],site_id=id)
-			new_post=post(title=items[0],created_at=utc.localize(items[1]),url=items[2],site_id=id)
+			# new_post=Post(title=items[0],created_at=utc.localize(datetime.strptime(items[1], "%Y-%m-%d")),url=items[2],site_id=id)
+			new_post=Post(title=items[0],created_at=utc.localize(items[1]),url=items[2],site_id=id)
 			new_post.save()
 
 		return HttpResponse('Crawling Completed')

@@ -1,9 +1,9 @@
 from django.contrib import admin
-from mainapp.models import post,rating,site
+from mainapp.models import Post,Rating,Site
 
 class siteadmin(admin.ModelAdmin):
 	list_display=('name','last_access','frequency')
 
-admin.site.register(post)
-admin.site.register(rating)
-admin.site.register(site,siteadmin)
+admin.site.register(Post)
+admin.site.register(Rating)
+admin.site.register(Site,siteadmin)
