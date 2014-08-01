@@ -143,7 +143,7 @@ def test(request):
 	return HttpResponse('Alldone')
 
 def crawleradmin(request):
-	sites=site.objects.all()
+	sites=Site.objects.all()
 	return render(request,'mainapp/crawler.html',{'title':'Crawler','sites':sites})
 
 def crawlsite(request,id):
