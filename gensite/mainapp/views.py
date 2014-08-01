@@ -10,7 +10,7 @@ from mainapp.models import Post,Rating,Site
 from django.contrib.auth.models import User
 
 from datetime import datetime
-from random import sample,choice
+from random import sample,choice,randint
 import pytz
 
 
@@ -113,19 +113,14 @@ def ratepost(request):
 	users=User.objects.all()
 	posts=Post.objects.all()
 	scores=[0,1,2]
+	num_posts=randint(180,200)
 
-	user=choice(users)
-	post=choice(posts)
-	score=choice(scores)
-	new_rating=Rating(user_id=user.id,post_id=post.id,score=score)
-	new_rating.save()
-
-	# for user as users:
-	# 	sample_posts= sample(posts,200)
-	# 	for rate_post as sample_posts:
-	# 		rating = choice(values)
-	# 		new_rating = rating()
-
+	for user in users:
+		sample_posts= sample(set(posts),num_posts)
+		for post in sample_posts:
+			score=choice(scores)
+			new_rating=Rating(user_id=user.id,post_id=post.id,score=score)
+			new_rating.save()
 
 	return HttpResponse('Rating Completed')
 
