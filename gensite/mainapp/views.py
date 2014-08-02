@@ -108,40 +108,6 @@ def home(request):
 		posts = paginator.page(paginator.num_pages)
 	return render(request,'mainapp/home.html',{'posts':posts})
 
-
-def ratepost(request):
-	users=User.objects.all()
-	posts=Post.objects.all()
-	scores=[0,1,2]
-	num_posts=randint(180,200)
-
-	for user in users:
-		sample_posts= sample(set(posts),num_posts)
-		for post in sample_posts:
-			score=choice(scores)
-			new_rating=Rating(user_id=user.id,post_id=post.id,score=score)
-			new_rating.save()
-
-	return HttpResponse('Rating Completed')
-
-def test(request):
-	# User table seeder
-
-	# cursor=connection.cursor()
-	# cursor.execute("SELECT * FROM MOCK_DATA")
-	# rows=cursor.fetchall()
-	# print(rows[0])
-	# for row in rows:
-	# 	try:
-	# 		user = auth.models.User.objects.create_user(row[4], row[7], 'kathmandu')
-	# 		user.first_name=row[5]
-	# 		user.last_name=row=[6]
-	# 		user.save()
-	# 	except:
-	# 		pass
-
-	return HttpResponse('Alldone')
-
 def crawleradmin(request):
 	sites=Site.objects.all()
 	return render(request,'mainapp/crawler.html',{'title':'Crawler','sites':sites})
@@ -162,3 +128,47 @@ def crawlsite(request,id):
 		return HttpResponse('Crawling Completed')
 	except:
 		return HttpResponse('Errors occured')
+
+def seedrating(request):
+	users=User.objects.all()
+	posts=Post.objects.all()
+	scores=[0,1,2]
+	num_posts=randint(180,200)
+
+	for user in users:
+		sample_posts= sample(set(posts),num_posts)
+		for post in sample_posts:
+			score=choice(scores)
+			new_rating=Rating(user_id=user.id,post_id=post.id,score=score)
+			new_rating.save()
+
+	return HttpResponse('Rating Completed')
+
+def ratepost(request):
+	rating_score=request.GET['score']
+	id=request.GET['id']
+	if request.user.is_authenticated:
+		new_rating=Rating(user_id=user.id,post_id=id,score=rating_score)
+		new_rating.save()
+		return HttpResponse('Rating Done')
+	else:
+		return HttpResponse('Login Required')
+
+
+def test(request):
+	# User table seeder
+
+	# cursor=connection.cursor()
+	# cursor.execute("SELECT * FROM MOCK_DATA")
+	# rows=cursor.fetchall()
+	# print(rows[0])
+	# for row in rows:
+	# 	try:
+	# 		user = auth.models.User.objects.create_user(row[4], row[7], 'kathmandu')
+	# 		user.first_name=row[5]
+	# 		user.last_name=row=[6]
+	# 		user.save()
+	# 	except:
+	# 		pass
+
+	return HttpResponse('Alldone')

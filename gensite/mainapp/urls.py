@@ -10,7 +10,8 @@ urlpatterns = patterns('',
 	url(r'^admin/crawler',views.crawleradmin,name='crawleradmin'),
 	url(r'^crawl/(?P<id>\d+)/',views.crawlsite,name='crawlsite'),
 	
-	url(r'^ratepost/',views.ratepost,name='ratepost'),
+	url(r'^seedrating/',views.seedrating,name='seedrating'),
+	url(r'^rate/',views.ratepost,name='ratepost'),
 	
 	url(r'^test/',views.test,name='test'),
 	)

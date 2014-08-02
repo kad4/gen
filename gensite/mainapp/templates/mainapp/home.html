@@ -22,10 +22,10 @@
 	              <div class="row">
 	              	<div class="col-xs-12">
 	              		<h5 style="margin-top:0px;">
-	              			<small>
+	              			<small id="rating">
 	              				Interesed in this topic:
-	              				<a href="#" class="text-muted" style="font-weight:bold">Yes</a> | 
-	              				<a href="#" class="text-muted" style="font-weight:bold">No</a>
+	              				<a href="#" class="text-muted" style="font-weight:bold" onclick="ratepost({{ post.id }},2)">Yes</a> | 
+	              				<a href="#" class="text-muted" style="font-weight:bold" onclick="ratepost({{ post.id }},1)">No</a>
 	              			</small>
 	              		</h5>
 	              	</div>
