@@ -148,7 +148,7 @@ def ratepost(request):
 	rating_score=request.GET['score']
 	id=request.GET['id']
 	if request.user.is_authenticated:
-		new_rating=Rating(user_id=user.id,post_id=id,score=rating_score)
+		new_rating=Rating(user_id=request.user.id,post_id=id,score=rating_score)
 		new_rating.save()
 		return HttpResponse('Rating Done')
 	else:

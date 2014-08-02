@@ -25,7 +25,7 @@
 	              			<small id="rating">
 	              				Interesed in this topic:
 	              				<a href="#" class="text-muted" style="font-weight:bold" onclick="ratepost({{ post.id }},2)">Yes</a> | 
-	              				<a href="#" class="text-muted" style="font-weight:bold" onclick="ratepost({{ post.id }},0)">No</a>
+	              				<a href="#" class="text-muted" style="font-weight:bold" onclick="ratepost({{ post.id }},1)">No</a>
 	              			</small>
 	              		</h5>
 	              	</div>
