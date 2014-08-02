@@ -9,10 +9,11 @@ from django.contrib.auth.decorators import login_required
 from mainapp.models import Post,Rating,Site
 from django.contrib.auth.models import User
 
+from sklearn.cluster import KMeans
+
 from datetime import datetime
 from random import sample,choice,randint
 import pytz
-
 
 
 from genpy import crawler
@@ -154,6 +155,8 @@ def ratepost(request):
 	else:
 		return HttpResponse('Login Required')
 
+def recommender(request):
+	
 
 def test(request):
 	# User table seeder
