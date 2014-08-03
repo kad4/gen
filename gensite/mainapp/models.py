@@ -25,5 +25,8 @@ class Rating(models.Model):
 	post= models.ForeignKey(Post)
 	score= models.PositiveSmallIntegerField()
 
+	def __str__(self):
+		return (self.user.username + ' rated post with id ' + str(self.post.id) + ' ' + str(self.score))
+
 
 
