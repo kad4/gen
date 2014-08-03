@@ -136,9 +136,12 @@ def seedrating(request):
 		posts= sample(set(total_posts),num_posts)
 		for post in posts:
 			score=choice(scores)
-			new_rating=Rating(user_id=user.id,post_id=post.id,score=score)
-			new_rating.save()
 
+			rating= Rating.objects.filter(user_id=user.id,post_id=post.id)
+			if(not(rating)):
+				new_rating=Rating(user_id=user.id,post_id=post.id,score=score)
+				new_rating.save()
+				
 	return HttpResponse('Rating Completed')
 
 @login_required(redirect_field_name='index')
@@ -155,11 +158,18 @@ def home(request):
 	except EmptyPage:
 		# If page is out of range (e.g. 9999), deliver last page of results.
 		posts = paginator.page(paginator.num_pages)
+
+	for post in posts:
+		rating = Rating.objects.filter(post_id=post.id,user_id=request.user.id)
+		if (rating):
+			post.is_rated=True
+		else:
+			post.is_rated=False
 	return render(request,'mainapp/home.html',{'posts':posts})
 
 @login_required(redirect_field_name='index')
 def trending(request):
-	pass
+	return HttpResponse('Recommendation are supposed to be here')
 
 @login_required
 def ratepost(request):

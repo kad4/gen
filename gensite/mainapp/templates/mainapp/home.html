@@ -23,9 +23,11 @@
 	              	<div class="col-xs-12">
 	              		<h5 style="margin-top:0px;">
 	              			<small id="rating">
-	              				Interesed in this topic:
-	              				<a href="#" class="text-muted" style="font-weight:bold" onclick="ratepost({{ post.id }},2)">Yes</a> | 
-	              				<a href="#" class="text-muted" style="font-weight:bold" onclick="ratepost({{ post.id }},0)">No</a>
+	              				{% if not post.is_rated %}
+		              				Interesed in this topic:
+		              				<a href="#" class="text-muted" style="font-weight:bold" onclick="ratepost({{ post.id }},2)">Yes</a> | 
+		              				<a href="#" class="text-muted" style="font-weight:bold" onclick="ratepost({{ post.id }},0)">No</a>
+	              				{% endif %}
 	              			</small>
 	              		</h5>
 	              	</div>
