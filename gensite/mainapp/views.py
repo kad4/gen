@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.db import connection
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 from mainapp.models import Post,Rating,Site
 from django.contrib.auth.models import User
@@ -97,26 +98,12 @@ def logout(request):
 	auth.logout(request)
 	return redirect('index')
 
-@login_required(redirect_field_name='index')
-def home(request):
-	total_posts=Post.objects.all().order_by('-created_at')
-	paginator = Paginator(total_posts, 10)
-
-	page = request.GET.get('page')
-	try:
-		posts = paginator.page(page)
-	except PageNotAnInteger:
-		# If page is not an integer, deliver first page.
-		posts = paginator.page(1)
-	except EmptyPage:
-		# If page is out of range (e.g. 9999), deliver last page of results.
-		posts = paginator.page(paginator.num_pages)
-	return render(request,'mainapp/home.html',{'posts':posts})
-
+@staff_member_required
 def crawleradmin(request):
 	sites=Site.objects.all()
 	return render(request,'mainapp/crawler.html',{'title':'Crawler','sites':sites})
 
+@staff_member_required
 def crawlsite(request,id):
 	crawl_site=site.objects.get(pk=id)
 	try:
@@ -134,6 +121,7 @@ def crawlsite(request,id):
 	except:
 		return HttpResponse('Errors occured')
 
+@staff_member_required
 def seedrating(request):
 	num_users=200
 	scores=[0,1,2]
@@ -153,6 +141,27 @@ def seedrating(request):
 
 	return HttpResponse('Rating Completed')
 
+@login_required(redirect_field_name='index')
+def home(request):
+	total_posts=Post.objects.all().order_by('-created_at')
+	paginator = Paginator(total_posts, 10)
+
+	page = request.GET.get('page')
+	try:
+		posts = paginator.page(page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		posts = paginator.page(1)
+	except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+		posts = paginator.page(paginator.num_pages)
+	return render(request,'mainapp/home.html',{'posts':posts})
+
+@login_required(redirect_field_name='index')
+def trending(request):
+	pass
+
+@login_required
 def ratepost(request):
 	rating_score=request.GET['score']
 	id=request.GET['id']
@@ -162,10 +171,6 @@ def ratepost(request):
 		return HttpResponse('Rating Done')
 	else:
 		return HttpResponse('Login Required')
-
-def news(request):
-	pass
-
 
 def test(request):
 	# User table seeder
