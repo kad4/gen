@@ -95,7 +95,6 @@ class sitecrawler:
             if (cond1 and cond2) is True:
                 articleTitle = div.h2.text.encode('utf-8', 'ignore')
                 articleDatelst = path.split('.')[0].split('/')[1:-1]
-                # articleDate = articleDatelst[0] + '-' + articleDatelst[1] + '-' + articleDatelst[2]
                 articleDate = datetime(int(articleDatelst[0]),int(articleDatelst[1]),int(articleDatelst[2]))
 
                 articleURL = url

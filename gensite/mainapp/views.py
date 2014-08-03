@@ -98,11 +98,14 @@ def logout(request):
 	auth.logout(request)
 	return redirect('index')
 
+# Admin site for crawler
 @staff_member_required
 def crawleradmin(request):
 	sites=Site.objects.all()
 	return render(request,'mainapp/crawler.html',{'title':'Crawler','sites':sites})
 
+
+# Link for crawler
 @staff_member_required
 def crawlsite(request,id):
 	crawl_site=site.objects.get(pk=id)
@@ -113,7 +116,6 @@ def crawlsite(request,id):
 		utc=pytz.UTC
 
 		for items in obj.Articles:
-			# new_post=Post(title=items[0],created_at=utc.localize(datetime.strptime(items[1], "%Y-%m-%d")),url=items[2],site_id=id)
 			new_post=Post(title=items[0],created_at=utc.localize(items[1]),url=items[2],site_id=id)
 			new_post.save()
 
@@ -121,6 +123,7 @@ def crawlsite(request,id):
 	except:
 		return HttpResponse('Errors occured')
 
+# Seeder for ratings
 @staff_member_required
 def seedrating(request):
 	num_users=200
@@ -141,7 +144,7 @@ def seedrating(request):
 			if(not(rating)):
 				new_rating=Rating(user_id=user.id,post_id=post.id,score=score)
 				new_rating.save()
-				
+
 	return HttpResponse('Rating Completed')
 
 @login_required(redirect_field_name='index')
@@ -169,18 +172,17 @@ def home(request):
 
 @login_required(redirect_field_name='index')
 def trending(request):
-	return HttpResponse('Recommendation are supposed to be here')
+	# Recommendation system
+
+	return render(request,'mainapp/home.html',{})
 
 @login_required
 def ratepost(request):
 	rating_score=request.GET['score']
 	id=request.GET['id']
-	if request.user.is_authenticated:
-		new_rating=Rating(user_id=request.user.id,post_id=id,score=rating_score)
-		new_rating.save()
-		return HttpResponse('Rating Done')
-	else:
-		return HttpResponse('Login Required')
+	new_rating=Rating(user_id=request.user.id,post_id=id,score=rating_score)
+	new_rating.save()
+	return HttpResponse('Rating Done')
 
 def test(request):
 	# User table seeder
