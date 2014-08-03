@@ -135,14 +135,18 @@ def crawlsite(request,id):
 		return HttpResponse('Errors occured')
 
 def seedrating(request):
-	users=User.objects.all()
-	posts=Post.objects.all()
+	num_users=200
 	scores=[0,1,2]
-	num_posts=randint(180,200)
+
+	total_users=User.objects.all()
+	total_posts=Post.objects.all()
+
+	users=sample(set(total_posts),num_users)
 
 	for user in users:
-		sample_posts= sample(set(posts),num_posts)
-		for post in sample_posts:
+		num_posts=randint(5,10)
+		posts= sample(set(total_posts),num_posts)
+		for post in posts:
 			score=choice(scores)
 			new_rating=Rating(user_id=user.id,post_id=post.id,score=score)
 			new_rating.save()
@@ -159,7 +163,7 @@ def ratepost(request):
 	else:
 		return HttpResponse('Login Required')
 
-def usernews(request):
+def news(request):
 	pass
 
 
