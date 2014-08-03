@@ -5,6 +5,7 @@ urlpatterns = patterns('',
 	url(r'^$', views.index, name='index'),
 	url(r'^home/', views.home, name='home'),	
 	url(r'^signup/',views.signup,name='signup'),
+	url(r'^news/',views.usernews,name='usernews'),
 	url(r'^logout/',views.logout,name='logout'),
 
 	url(r'^admin/crawler',views.crawleradmin,name='crawleradmin'),

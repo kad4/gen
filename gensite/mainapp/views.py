@@ -9,12 +9,16 @@ from django.contrib.auth.decorators import login_required
 from mainapp.models import Post,Rating,Site
 from django.contrib.auth.models import User
 
-from sklearn.cluster import KMeans
-
 from datetime import datetime
 from random import sample,choice,randint
 import pytz
 
+# sklean module uses scipy module
+# Importing scipy raises a deprecationwarning 
+import warnings
+with warnings.catch_warnings():
+	warnings.simplefilter("ignore")
+	from sklearn.cluster import KMeans
 
 from genpy import crawler
 
@@ -155,8 +159,9 @@ def ratepost(request):
 	else:
 		return HttpResponse('Login Required')
 
-def recommender(request):
-	
+def usernews(request):
+	pass
+
 
 def test(request):
 	# User table seeder
@@ -173,5 +178,6 @@ def test(request):
 	# 		user.save()
 	# 	except:
 	# 		pass
+
 
 	return HttpResponse('Alldone')
