@@ -5,7 +5,7 @@ class Siteadmin(admin.ModelAdmin):
 	list_display=('name','last_access','frequency')
 
 class Ratingadmin(admin.ModelAdmin):
-	search_fields=['post']
+	search_fields=['post__title']
 	list_display=('post','user','score')
 
 class Postadmin(admin.ModelAdmin):
