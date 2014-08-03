@@ -127,21 +127,22 @@ def crawlsite(request,id):
 # Seeder for ratings
 @staff_member_required
 def seedrating(request):
-	num_users=200
-	scores=[0,1,2]
+	num_users=randint(15,30)
+	scores=[1,2]
 
 	total_users=User.objects.all()
 	total_posts=Post.objects.all()
 
-	users=sample(set(total_posts),num_users)
+	users=sample(set(total_users),num_users)
 
 	for user in users:
-		num_posts=randint(5,10)
+		num_posts=randint(10,20)
 		posts= sample(set(total_posts),num_posts)
 		for post in posts:
 			score=choice(scores)
 
 			rating= Rating.objects.filter(user_id=user.id,post_id=post.id)
+
 			if(not(rating)):
 				new_rating=Rating(user_id=user.id,post_id=post.id,score=score)
 				new_rating.save()
@@ -176,7 +177,7 @@ def home(request):
 def trending(request):
 	# Posts and users
 	parameter_posts = Post.objects.filter(rating__user__id=request.user.id).order_by('-created_at')[:100]
-	users=User.objects.all().exclude(id=request.user.id)[:200]
+	users=User.objects.all()
 
 	# Calculating values of parameter for each user
 	X_data=[]
@@ -201,8 +202,9 @@ def trending(request):
 
 		X_data.append(X_user)
 
-	cluster=KMeans(n_clusters=20)
+	cluster=KMeans(n_clusters=10)
 	cluster.fit(X_data)
+	print(cluster.labels_)
 
 	paginator = Paginator(total_posts, 10)
 	page = request.GET.get('page')
@@ -247,6 +249,5 @@ def test(request):
 	# 		user.save()
 	# 	except:
 	# 		pass
-
 
 	return HttpResponse('Alldone')
