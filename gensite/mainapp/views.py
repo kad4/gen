@@ -14,6 +14,8 @@ from datetime import datetime
 from random import sample,choice,randint
 import pytz
 
+
+import numpy as np
 # sklean module uses scipy module
 # Importing scipy raises a deprecationwarning 
 import warnings
@@ -149,7 +151,7 @@ def seedrating(request):
 
 @login_required(redirect_field_name='index')
 def home(request):
-	total_posts=Post.objects.all().order_by('-created_at')
+	total_posts=Post.objects.all().order_by('-created_at')[:200]
 	paginator = Paginator(total_posts, 10)
 
 	page = request.GET.get('page')
@@ -173,8 +175,43 @@ def home(request):
 @login_required(redirect_field_name='index')
 def trending(request):
 	# Recommendation system
+	total_posts = Post.objects.filter(rating__user__id=request.user.id).order_by('-created_at')[:100]
+	users=User.objects.all().exclude(id=request.user.id)[:20]
+	X_data=[]
+	for user in users:
+		X_user=[]
+		for post in total_posts:
+			rating = Rating.objects.filter(post_id=post.id,user_id=request.user.id)[0]
+			if (rating):
+				X_user.append(rating.score)
+			else:
+				X_user.append(0)
+		X_data.append(X_user)
 
-	return render(request,'mainapp/home.html',{})
+	cluster=KMeans(n_clusters=1)
+	cluster.fit(X_data)
+
+	
+
+	paginator = Paginator(total_posts, 10)
+	page = request.GET.get('page')
+	try:
+		posts = paginator.page(page)
+	except PageNotAnInteger:
+		# If page is not an integer, deliver first page.
+		posts = paginator.page(1)
+	except EmptyPage:
+		# If page is out of range (e.g. 9999), deliver last page of results.
+		posts = paginator.page(paginator.num_pages)
+
+	for post in posts:
+		rating = Rating.objects.filter(post_id=post.id,user_id=request.user.id)
+		if (rating):
+			post.is_rated=True
+		else:
+			post.is_rated=False
+
+	return render(request,'mainapp/home.html',{'posts':posts})
 
 @login_required
 def ratepost(request):
