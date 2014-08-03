@@ -15,7 +15,6 @@ from random import sample,choice,randint
 import pytz
 
 
-import numpy as np
 # sklean module uses scipy module
 # Importing scipy raises a deprecationwarning 
 import warnings
@@ -172,26 +171,38 @@ def home(request):
 			post.is_rated=False
 	return render(request,'mainapp/home.html',{'posts':posts})
 
+# Recommendation system
 @login_required(redirect_field_name='index')
 def trending(request):
-	# Recommendation system
-	total_posts = Post.objects.filter(rating__user__id=request.user.id).order_by('-created_at')[:100]
-	users=User.objects.all().exclude(id=request.user.id)[:20]
+	# Posts and users
+	parameter_posts = Post.objects.filter(rating__user__id=request.user.id).order_by('-created_at')[:100]
+	users=User.objects.all().exclude(id=request.user.id)[:200]
+
+	# Calculating values of parameter for each user
 	X_data=[]
 	for user in users:
 		X_user=[]
-		for post in total_posts:
-			rating = Rating.objects.filter(post_id=post.id,user_id=request.user.id)[0]
-			if (rating):
+		
+		# for post in parameter_posts:
+		# 	rating = Rating.objects.filter(post_id=post.id,user_id=request.user.id)[0]
+		# 	if (rating):
+		# 		X_user.append(rating.score)
+		# 	else:
+		# 		X_user.append(0)
+
+		user_posts = Post.objects.filter(rating__user__id=user.id).order_by('-created_at')[:100]
+		for post in parameter_posts:
+			if post in user_posts:
+				rating= Rating.objects.filter(post_id=post.id,user_id=user.id)[0]
 				X_user.append(rating.score)
 			else:
 				X_user.append(0)
+		
+
 		X_data.append(X_user)
 
-	cluster=KMeans(n_clusters=1)
+	cluster=KMeans(n_clusters=20)
 	cluster.fit(X_data)
-
-	
 
 	paginator = Paginator(total_posts, 10)
 	page = request.GET.get('page')
