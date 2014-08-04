@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'djcelery',
     'mainapp',
+    'rssreader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -93,11 +94,11 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # Configuration for celery
-CELERY_TASK_SERIALIZER='json'
 CELERY_ACCEPT_CONTENT=['json'] # Ignore other content
+CELERY_TASK_SERIALIZER='json'
 CELERY_RESULT_SERIALIZER='json'
 CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
-
+CELERY_BEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 
 
