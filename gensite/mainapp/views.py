@@ -14,7 +14,6 @@ from datetime import datetime
 from random import sample,choice,randint
 import pytz
 
-
 # sklean module uses scipy module
 # Importing scipy raises a deprecationwarning 
 import warnings
@@ -175,13 +174,21 @@ def home(request):
 # Recommendation system
 @login_required(redirect_field_name='index')
 def trending(request):
-	# Posts and users
-	parameter_posts = Post.objects.filter(rating__user__id=request.user.id).order_by('-created_at')[:100]
-	users=User.objects.all()
 
-	# Calculating values of parameter for each user
+	# Grab everthing from database
+	users=User.objects.all()
+	posts=Post.objects.all()
+	ratings=Rating.objects.all()
+
+	# Parameter to be used
+	parameter_posts = Post.objects.filter(rating__user__id=request.user.id).order_by('-created_at')[:100]
+	
+	user_index=0
 	X_data=[]
-	for user in users:
+
+
+	print('Started At: ',datetime.now())
+	for count,user in enumerate(users):
 		X_user=[]
 		
 		# for post in parameter_posts:
@@ -191,20 +198,39 @@ def trending(request):
 		# 	else:
 		# 		X_user.append(0)
 
-		user_posts = Post.objects.filter(rating__user__id=user.id).order_by('-created_at')[:100]
+		if (user==request.user):
+			user_index=count
+
+		# user_posts = Post.objects.filter(rating__user__id=user.id).order_by('-created_at')[:100]
+		user_posts= posts.filter(rating__user__id=user.id).order_by('-created_at')[:100]
 		for post in parameter_posts:
 			if post in user_posts:
-				rating= Rating.objects.filter(post_id=post.id,user_id=user.id)[0]
+				# rating= Rating.objects.filter(post_id=post.id,user_id=user.id)[0]
+				rating= ratings.filter(post_id=post.id,user_id=user.id)[0]
 				X_user.append(rating.score)
 			else:
 				X_user.append(0)
-		
 
 		X_data.append(X_user)
+	print('Completed At: ',datetime.now())
 
-	cluster=KMeans(n_clusters=10)
-	cluster.fit(X_data)
-	print(cluster.labels_)
+
+	# K-means clustering algorithm
+	estimator=KMeans(n_clusters=10)
+	labels=estimator.fit_predict(X_data)
+	user_label=labels[user_index]
+
+	users_list=[]
+	for count,label in enumerate(labels):
+		if label == user_label:
+			users_list.append(count)
+
+	total_posts=[]
+	for user_id in users_list:
+		user=users[user_id]
+		# user_posts=Post.objects.filter(rating__user__id=user.id,rating__score=2).exclude(rating__user_id=users[user_index].id)
+		user_posts=posts.filter(rating__user__id=user.id,rating__score=2).exclude(rating__user_id=users[user_index].id)
+		total_posts.extend(user_posts)
 
 	paginator = Paginator(total_posts, 10)
 	page = request.GET.get('page')
@@ -218,7 +244,8 @@ def trending(request):
 		posts = paginator.page(paginator.num_pages)
 
 	for post in posts:
-		rating = Rating.objects.filter(post_id=post.id,user_id=request.user.id)
+		# rating = Rating.objects.filter(post_id=post.id,user_id=request.user.id)
+		rating= ratings.filter(post_id=post.id,user_id=request.user.id)
 		if (rating):
 			post.is_rated=True
 		else:
