@@ -2,7 +2,7 @@ from django.contrib import admin
 from mainapp.models import Post,Rating,Site
 
 class Siteadmin(admin.ModelAdmin):
-	list_display=('name','last_access','frequency')
+	list_display=('name','url','rssurl','last_access','frequency')
 
 class Ratingadmin(admin.ModelAdmin):
 	search_fields=['post__title']
