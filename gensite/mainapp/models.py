@@ -28,5 +28,9 @@ class Rating(models.Model):
 	def __str__(self):
 		return (self.user.username + ' rated post with id ' + str(self.post.id) + ' ' + str(self.score))
 
+class UserData(models.Model):
+	user= models.ForeignKey(User)
+	cluster_class= models.IntegerField()
+
 
 
