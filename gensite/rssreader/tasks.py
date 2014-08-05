@@ -14,7 +14,7 @@ from genpy import parser
 
 logger = get_task_logger(__name__)
 
-@periodic_task(run_every=(crontab(hour="*", minute="*",day_of_week="*")))
+@periodic_task(run_every=(crontab(hour="*")))
 def extractnews():
 	sites=Site.objects.all()
 	for site in sites:
@@ -24,3 +24,6 @@ def extractnews():
 			new_post=Post(title=items[0],created_at=utc.localize(items[1]),url=items[2],site_id=site.id)
 			new_post.save()
 
+@periodic_task(run_every=(crontab(day_of_week="4")))
+def cluster_user():
+	logger.info('')
