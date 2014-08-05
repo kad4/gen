@@ -14,8 +14,6 @@ from datetime import datetime
 from random import sample,choice,randint
 import pytz
 
-from rssreader import tasks
-
 from genpy import crawler
 
 class SignupForm(forms.ModelForm):
@@ -36,6 +34,7 @@ class LoginForm(forms.Form):
 	username=forms.CharField(max_length=30,widget=forms.TextInput(attrs={'class':'form-control input-xlarge'}))	
 	password=forms.CharField(max_length=30,widget=forms.PasswordInput(attrs={'class':'form-control input-xlarge'}))	
 
+# Homepage
 def index(request):
 	if(request.method=='POST'):
 		form=LoginForm(request.POST)
@@ -99,7 +98,6 @@ def crawleradmin(request):
 	sites=Site.objects.all()
 	return render(request,'mainapp/crawler.html',{'title':'Crawler','sites':sites})
 
-
 # Link for crawler
 @staff_member_required
 def crawlsite(request,id):
@@ -143,9 +141,10 @@ def seedrating(request):
 
 	return HttpResponse('Rating Completed')
 
+# Dashboard for logged in users
 @login_required(redirect_field_name='index')
 def home(request):
-	total_posts=Post.objects.all().order_by('-created_at')[:200]
+	total_posts=Post.objects.all().order_by('-created_at')[:300]
 	paginator = Paginator(total_posts, 10)
 
 	page = request.GET.get('page')
@@ -166,13 +165,15 @@ def home(request):
 			post.is_rated=False
 	return render(request,'mainapp/home.html',{'posts':posts})
 
-# Recommendation system
+# Trending page to show recommendations
 @login_required(redirect_field_name='index')
 def trending(request):
 	userdata=UserData.objects.get(user_id=request.user.id)
 
-	# Eliminate repeating values
-	total_posts=Post.objects.filter(rating__user__userdata__cluster_class=userdata.cluster_class)
+	# Retrives posts without repeating them
+	total_posts=list(set(
+		Post.objects.filter(rating__user__userdata__cluster_class=userdata.cluster_class,rating__score=2)
+		.exclude(rating__user__id=request.user.id)[:100]))
 
 	paginator = Paginator(total_posts, 10)
 	page = request.GET.get('page')
@@ -194,6 +195,8 @@ def trending(request):
 
 	return render(request,'mainapp/home.html',{'posts':posts})
 
+
+# Ajax link to rate post
 @login_required
 def ratepost(request):
 	rating_score=request.GET['score']
