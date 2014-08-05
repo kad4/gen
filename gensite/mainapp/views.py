@@ -7,7 +7,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
-from mainapp.models import Post,Rating,Site
+from mainapp.models import Post,Rating,Site,UserData
 from django.contrib.auth.models import User
 
 from datetime import datetime
@@ -15,13 +15,6 @@ from random import sample,choice,randint
 import pytz
 
 from rssreader import tasks
-
-# sklean module uses scipy module
-# Importing scipy raises a deprecationwarning 
-import warnings
-with warnings.catch_warnings():
-	warnings.simplefilter("ignore")
-	from sklearn.cluster import KMeans
 
 from genpy import crawler
 
@@ -176,63 +169,10 @@ def home(request):
 # Recommendation system
 @login_required(redirect_field_name='index')
 def trending(request):
+	userdata=UserData.objects.get(user_id=request.user.id)
 
-	# Grab everthing from database
-	users=User.objects.all()
-	posts=Post.objects.all()
-	ratings=Rating.objects.all()
-
-	# Parameter to be used
-	parameter_posts = Post.objects.filter(rating__user__id=request.user.id).order_by('-created_at')[:100]
-	
-	user_index=0
-	X_data=[]
-
-
-	print('Started At: ',datetime.now())
-	for count,user in enumerate(users):
-		X_user=[]
-		
-		# for post in parameter_posts:
-		# 	rating = Rating.objects.filter(post_id=post.id,user_id=request.user.id)[0]
-		# 	if (rating):
-		# 		X_user.append(rating.score)
-		# 	else:
-		# 		X_user.append(0)
-
-		if (user==request.user):
-			user_index=count
-
-		# user_posts = Post.objects.filter(rating__user__id=user.id).order_by('-created_at')[:100]
-		user_posts= posts.filter(rating__user__id=user.id).order_by('-created_at')[:100]
-		for post in parameter_posts:
-			if post in user_posts:
-				# rating= Rating.objects.filter(post_id=post.id,user_id=user.id)[0]
-				rating= ratings.filter(post_id=post.id,user_id=user.id)[0]
-				X_user.append(rating.score)
-			else:
-				X_user.append(0)
-
-		X_data.append(X_user)
-	print('Completed At: ',datetime.now())
-
-
-	# K-means clustering algorithm
-	estimator=KMeans(n_clusters=10)
-	labels=estimator.fit_predict(X_data)
-	user_label=labels[user_index]
-
-	users_list=[]
-	for count,label in enumerate(labels):
-		if label == user_label:
-			users_list.append(count)
-
-	total_posts=[]
-	for user_id in users_list:
-		user=users[user_id]
-		# user_posts=Post.objects.filter(rating__user__id=user.id,rating__score=2).exclude(rating__user_id=users[user_index].id)
-		user_posts=posts.filter(rating__user__id=user.id,rating__score=2).exclude(rating__user_id=users[user_index].id)
-		total_posts.extend(user_posts)
+	# Eliminate repeating values
+	total_posts=Post.objects.filter(rating__user__userdata__cluster_class=userdata.cluster_class)
 
 	paginator = Paginator(total_posts, 10)
 	page = request.GET.get('page')
@@ -247,7 +187,7 @@ def trending(request):
 
 	for post in posts:
 		# rating = Rating.objects.filter(post_id=post.id,user_id=request.user.id)
-		rating= ratings.filter(post_id=post.id,user_id=request.user.id)
+		rating= Rating.objects.filter(post_id=post.id,user_id=request.user.id)
 		if (rating):
 			post.is_rated=True
 		else:
