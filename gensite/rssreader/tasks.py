@@ -22,20 +22,26 @@ with warnings.catch_warnings():
 
 logger = get_task_logger(__name__)
 
-# @periodic_task(run_every=(crontab(hour="*")))
-# def extractnews():
-# 	sites=Site.objects.all()
-# 	for site in sites:
-# 		data=parser.parser(site.rssurl)
 
-# 		for items in data:
-# 			new_post=Post(title=items[0],created_at=utc.localize(items[1]),url=items[2],site_id=site.id)
-# 			new_post.save()
+# RSS reader to extract news
+# @periodic_task(run_every=(crontab(minute="*")))
+def extractnews():
+	sites=Site.objects.all()
+	for site in sites:
+		posts=parser.parser(site.rssurl)
 
+		for post in posts:
+			old_post= Post.objects.filter(url=post[2])
+			if (not(old_post)):
+				new_post= Post(title=post[0],created_at=utc.localize(post[1]),url=post[2],site_id=site.id)
+				new_post.save()
+
+
+# K-means clustering algorithm to cluster users
 @periodic_task(run_every=(crontab(minute="*")))
 def cluster_user():
-	logger.info('Started')
 
+	# Database models
 	users=User.objects.all()
 	# posts=Post.objects.all()
 	# ratings=Rating.objects.all()
@@ -44,10 +50,11 @@ def cluster_user():
 	# Parameter to be used
 	parameter_posts=Post.objects.all().order_by('-created_at')[:100]
 	
-	user_index=0
+	# Input matrix for K-means clustering
 	X_data=[]
-	
-	for count,user in enumerate(users):
+
+	for user in users:
+		# Row for each user
 		X_user=[]
 
 		user_posts = Post.objects.filter(rating__user__id=user.id).order_by('-created_at')[:100]
@@ -65,10 +72,10 @@ def cluster_user():
 	estimator.fit_predict(X_data)
 
 	for count,user in enumerate(users):
-		userdata=UserData.objects.get(user_id=user.id)
-		if userdata:
-			userdata.cluster_class=estimator.labels__[count]
-			userdata.save()
+		userdata=UserData.objects.filter(user_id=user.id)
+		if (userdata):
+			userdata[0].cluster_class=estimator.labels_[count]
+			userdata[0].save()
 		else:
 			new_userdata=UserData(user_id=user.id,cluster_class=estimator.labels_[count])
-			userdata.save()
+			new_userdata.save()
