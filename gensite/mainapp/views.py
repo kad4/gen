@@ -14,6 +14,8 @@ from datetime import datetime
 from random import sample,choice,randint
 import pytz
 
+from rssreader import tasks
+
 # sklean module uses scipy module
 # Importing scipy raises a deprecationwarning 
 import warnings
