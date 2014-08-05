@@ -39,7 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'djcelery',
     'mainapp',
-    'rssreader',
+    'scheduler',
 )
 
 MIDDLEWARE_CLASSES = (
