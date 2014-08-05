@@ -32,5 +32,8 @@ class UserData(models.Model):
 	user= models.ForeignKey(User)
 	cluster_class= models.IntegerField()
 
+	def __str__(self):
+		return (self.user.username + ' belongs to class ' + str(self.cluster_class))
+
 
 
