@@ -2,7 +2,15 @@
 
 {% block content %}
 	<div class="row">
-		<div class="col-sm-6">
+		<div class="col-sm-8">
+			<div class="row">
+				<section>
+			  		<h2>Get Started</h2>
+			  		<div class="hline"></div>
+			  	</section>
+			</div>
+		</div>
+		<div class="col-sm-4">
 			<form class="form-horizontal well" method="post" action="{% url 'signup' %}">
 				{% if message %}
 					<div class="alert alert-info">{{ message }}</div>
@@ -22,10 +30,8 @@
 					</div>
 					{% endfor %}
 
-					<div class="control-group" style="margin-top:10px;">
-						<button class="btn btn-lg btn-theme" type="submit">Signup</button>
-					</div>
-
+					<p style="margin-top:10px;"><button class="btn btn-lg btn-theme" type="submit">Sign Up</button></p>
+					<p><a class="btn" href="{% url 'index' %}">Trying to login?</a></p>
 				</fieldset>
 			</form>
 		</div>
