@@ -186,7 +186,6 @@ def trending(request):
 		posts = paginator.page(paginator.num_pages)
 
 	for post in posts:
-		# rating = Rating.objects.filter(post_id=post.id,user_id=request.user.id)
 		rating= Rating.objects.filter(post_id=post.id,user_id=request.user.id)
 		if (rating):
 			post.is_rated=True
