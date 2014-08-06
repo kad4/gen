@@ -1,11 +1,14 @@
-import pickle
 import time
+import urllib.request
 
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 
 
 def parser(URL):
+    opener = urllib.request.build_opener()
+    opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+    urllib.request.install_opener(opener)
     print("Parsing:", URL)
     try:
         currentPage = urlopen(URL).read()
@@ -20,21 +23,19 @@ def parser(URL):
 
 
 def parseHTML(URL, PAGE, SOUP):
+
     print("Parsing HTML")
+
     try:
         currentPage = PAGE
         soup = SOUP
 
-        titles = []
 
-        for link in soup.find_all('a'):
-            titles.append([link.string, link.get('href')])
+        item = soup.find('div', id='sing_cont')
+        itemText = item.findAll('p')
+        TextItem = [paras for paras in itemText]
 
-        f = open('list.lst', 'wb')
-        print("written")
-        pickle.dump(titles, f, protocol=pickle.HIGHEST_PROTOCOL)
-
-        return True
+        return TextItem
     except Exception as e:
         print(e)
         return False
@@ -60,4 +61,6 @@ def parseXML(URL, PAGE, SOUP):
         return False
 
 if __name__ == '__main__':
-    print(parser('http://localhost/gen/feed.xml'))
+    text = parser('http://www.ratopati.com/2014/08/06/157162.html')
+    for sT in text:
+        print(sT.encode('utf-8'))
