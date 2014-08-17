@@ -12,7 +12,7 @@ from urllib.parse import urlencode
 
 url = '127.0.0.1'
 
-s = socket.socket()
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 host = url
 port = 6200

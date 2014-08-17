@@ -1,20 +1,13 @@
-import re
+from sys import getsizeof
+import pickle
 
-from urllib.parse import urlparse
-from bs4 import BeautifulSoup
+posts = [['hello' + str(i), i, 'host'] for i in range(10)]
 
-print(urlparse('https://w3.facebook.co.uk/').netloc.split('.'))
+print(posts)
 
-print('hello'.split('e')[-1], 'hello'.split('m'))
+print(4 % 5, 2 % 1, 4 % 2)
 
-print(urlparse('http://www.facebook.com/').netloc)
-print(urlparse('http://facebook.com').netloc)
-
-f = open('try.htm', 'r')
-list = f.read()
-f.close()
-soup = BeautifulSoup(list)
-print(soup.findAll('p')[3].parent)
-list = ['a', 'e', 3, 'o', 'u']
-list.remove('e')
-print(list)
+output = pickle.dumps(54512135415343435434343434)
+output1 = pickle.dumps(5465555555555555555555555555555555555555555555555555533456544512135415343435434343434)
+print(getsizeof(output))
+print(getsizeof(output1))
