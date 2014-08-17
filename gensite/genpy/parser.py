@@ -1,7 +1,9 @@
+import re
 import time
 import urllib.request
 
 from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 from urllib.request import urlopen
 
 
@@ -30,11 +32,23 @@ def parseHTML(URL, PAGE, SOUP):
         currentPage = PAGE
         soup = SOUP
 
-
-        item = soup.find('div', id='sing_cont')
-        itemText = item.findAll('p')
-        TextItem = [paras for paras in itemText]
-
+        netloc = urlparse(URL).netloc.split('.')
+        if 'ratopati' in netloc or 'onlinekhabar' in netloc:
+            item = soup.find('div', id='sing_cont')
+            itemText = item.findAll('p')
+            TextItem = [paras for paras in itemText]
+        elif 'setopati' in netloc:
+            item = soup.find('div', id='newsbox')
+            itemText = item.findAll('div', class_=False)
+            TextItem = [paras for paras in itemText]
+        elif 'bbc' in netloc:
+            item = soup.find('div', class_='bodytext')
+            itemText = item.findAll(re.compile('p|h2'))
+            TextItem = [paras for paras in itemText]
+            for paras in TextItem:
+                print (paras.encode('utf-8'),'|||',paras.parent.encode('utf-8'))
+                if paras.parent != item:
+                    TextItem.remove(paras)
         return TextItem
     except Exception as e:
         print(e)
@@ -61,6 +75,7 @@ def parseXML(URL, PAGE, SOUP):
         return False
 
 if __name__ == '__main__':
-    text = parser('http://www.ratopati.com/2014/08/06/157162.html')
+    text = parser('http://www.bbc.co.uk/nepali/news/2014/06/140602_ucpn_maoist_brb.shtml')
     for sT in text:
-        print(sT.encode('utf-8'))
+        # print(sT.encode('utf-8'))
+        pass
