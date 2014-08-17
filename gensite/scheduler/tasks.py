@@ -24,7 +24,7 @@ logger = get_task_logger(__name__)
 
 
 # RSS reader to extract news
-# @periodic_task(run_every=(crontab(minute="*")))
+@periodic_task(run_every=(crontab(minute="*")))
 def extractnews():
 	sites=Site.objects.all()
 	for site in sites:
@@ -33,12 +33,14 @@ def extractnews():
 		for post in posts:
 			old_post= Post.objects.filter(url=post[2])
 			if (not(old_post)):
+				utc=pytz.UTC
+				
 				new_post= Post(title=post[0],created_at=utc.localize(post[1]),url=post[2],site_id=site.id)
 				new_post.save()
 
 
 # K-means clustering algorithm to cluster users
-@periodic_task(run_every=(crontab(minute="*")))
+# @periodic_task(run_every=(crontab(minute="*")))
 def cluster_user():
 
 	# Database models
