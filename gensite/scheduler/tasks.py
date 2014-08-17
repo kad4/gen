@@ -33,6 +33,8 @@ def extractnews():
 		for post in posts:
 			old_post= Post.objects.filter(url=post[2])
 			if (not(old_post)):
+				utc=pytz.UTC
+				
 				new_post= Post(title=post[0],created_at=utc.localize(post[1]),url=post[2],site_id=site.id)
 				new_post.save()
 
