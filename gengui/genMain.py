@@ -15,7 +15,7 @@ url = '127.0.0.1'
 s = socket.socket()
 
 host = url
-port = 62000
+port = 6200
 
 # s.connect((host, port))
 
@@ -65,6 +65,7 @@ class mainFrame(QtGui.QMainWindow):
         f.close()
         self.close()
         login.show()
+        # logout
 
     def redirectButtonClicked(self):
         link = self.ui.itemList.currentItem.getData()[1]
