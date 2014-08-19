@@ -7,6 +7,8 @@ import socket
 
 from serverConfig import *
 from PyQt4 import QtCore, QtGui, QtWebKit
+from PyQt4.QtCore import Qt
+from PyQt4.QtGui import QApplication, QCursor
 from loginFrame import Ui_loginFrameParent
 from mainFrame import Ui_MainWindow
 from urllib.request import urlopen, Request
@@ -203,7 +205,7 @@ def sendData(data):
     # cursor change code
 
 def communicationProc(data):
-    # cursor change code
+    QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect((host, port))
     b = json.dumps(data).encode()
@@ -219,10 +221,10 @@ def communicationProc(data):
     bufferSize = pickle.loads(s.recv(1024))
     response = json.loads(s.recv(bufferSize).decode())
     s.close()
-    # cursor change code
+    QApplication.restoreOverrideCursor()
     return response
 
-url = 'http://127.0.0.1'
+url = 'http://ujwalsubedi.com'
 sessionID = -1
 app = QtGui.QApplication(sys.argv)
 window = mainFrame()
