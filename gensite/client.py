@@ -5,12 +5,12 @@ from sys import getsizeof
 
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
-port=6200
+port=6201
 
 s.connect(('127.0.0.1', port))
 
 data={'action':'login'}
-b = pickle.dumps(data,protocol=pickle.HIGHEST_PROTOCOL)
+b = pickle.dumps(data,protocol=0)
 s.send(b)
 
 buff= pickle.loads(s.recv(1024))
