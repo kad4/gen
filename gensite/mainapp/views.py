@@ -13,6 +13,7 @@ from django.contrib.auth.models import User
 
 from datetime import datetime
 from random import sample,choice,randint
+import json
 import pytz
 
 from genpy import crawler
@@ -207,23 +208,35 @@ def ratepost(request):
 	return HttpResponse('Rating Done')
 
 def clientconnect(request):
-	action=request.POST['action']
+	action=request.GET['action']
 	if (action=='login'):
-		username=request.POST['username']
-		password=request.POST['password']
+		username=request.GET['username']
+		password=request.GET['password']
 		user=authenticate(username=username,password=password)
 		if user is not None:
+			session_id=''
 			while True:
-				session_id=''
 				for i in range(1,30):
-					session_id=session_id+str(i)
+					session_id=session_id+str(randint(0,9))
 				ids=UserData.objects.values_list('session_id')
 				if (session_id not in ids):
+					userdata=UserData.objects.filter(user__username=username)[0]
+					userdata.session_id=session_id
+					userdata.save()
 					break;
+				else:
+					sesion_id=''
+			return HttpResponse(json.dumps(session_id))
+		else:
+			return HttpResponse(json.dumps(False))
 	else:
 		session_id=request.POST['session_id']
+		user=User.objects.userdata_set
 		if (action=='like'):
-			
+			id=request.POST['id']
+			score=request.POST['state']
+
+
 
 
 
