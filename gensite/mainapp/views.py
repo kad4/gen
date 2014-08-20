@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db import connection
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -204,6 +205,28 @@ def ratepost(request):
 	new_rating=Rating(user_id=request.user.id,post_id=id,score=rating_score)
 	new_rating.save()
 	return HttpResponse('Rating Done')
+
+def clientconnect(request):
+	action=request.POST['action']
+	if (action=='login'):
+		username=request.POST['username']
+		password=request.POST['password']
+		user=authenticate(username=username,password=password)
+		if user is not None:
+			while True:
+				session_id=''
+				for i in range(1,30):
+					session_id=session_id+str(i)
+				ids=UserData.objects.values_list('session_id')
+				if (session_id not in ids):
+					break;
+	else:
+		session_id=request.POST['session_id']
+		if (action=='like'):
+			
+
+
+
 
 def test(request):
 	# User table seeder

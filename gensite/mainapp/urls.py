@@ -15,5 +15,7 @@ urlpatterns = patterns('',
 	url(r'^seedrating/',views.seedrating,name='seedrating'),
 	url(r'^rate/',views.ratepost,name='ratepost'),
 	
+	url(r'client/',views.clientconnect,name='clientconnect'),
+
 	url(r'^test/',views.test,name='test'),
 	)
