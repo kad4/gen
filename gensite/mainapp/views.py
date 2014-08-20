@@ -226,7 +226,7 @@ def clientconnect(request):
 					break;
 				else:
 					sesion_id=''
-			return HttpResponse(json.dumps(session_id))
+			return HttpResponse(json.dumps([True,session_id]))
 		else:
 			return HttpResponse(json.dumps(False))
 	else:
