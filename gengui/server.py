@@ -25,11 +25,11 @@ while True:
         if request["action"] == "login":
             print(request["username"], " ", request["password"])
             if request["username"] == "aayush" and request["password"] == "subedi":
-                output = [True, 451]
+                output = [True, '451']
             else:
                 output = [False]
         elif request["action"] == "like" or request["action"] == "logout":
-            pass
+            output = [False]
         elif request["action"] == "checkSession":
             print(request["id"])
             if request["id"] == 451:

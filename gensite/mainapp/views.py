@@ -223,14 +223,14 @@ def clientconnect(request):
 					userdata=UserData.objects.filter(user__username=username)[0]
 					userdata.session_id=session_id
 					userdata.save()
-					break;
+					break
 				else:
 					sesion_id=''
 			return HttpResponse(json.dumps([True,session_id]))
 		else:
 			return HttpResponse(json.dumps(False))
 
-	elif(action=='checksession'):
+	elif(action=='checkSession'):
 		session_id=request.POST['session_id']
 		userdata=UserData.objects.filter(session_id=session_id)
 		if (userdata is not None):

@@ -15,7 +15,7 @@ from urllib.request import urlopen, Request
 from urllib.parse import urlencode
 
 
-buildType = 'deploy'
+buildType = 'debug'
 
 
 class mainFrame(QtGui.QMainWindow):
@@ -103,7 +103,7 @@ class mainFrame(QtGui.QMainWindow):
 
         artURL = self.ui.itemList.currentItem().data(QtCore.Qt.UserRole)[1]
 
-        response = communicationProc(url=artURL)
+        response = communicationProc(artURL=artURL)
 
         self.ui.webView.setContent(response)
 
@@ -181,7 +181,8 @@ class loginFrame(QtGui.QFrame):
 
             if response[0] is not False:
                 f = open('user.dat', 'wb')
-                pickle.dump(response[1], f)
+                sessionID = eval(response[1])
+                pickle.dump(sessionID, f)
                 f.close()
                 self.close()
                 startApp()
@@ -206,20 +207,21 @@ def communicationProc(data=None, artURL=None):
             b = json.dumps(data).encode()
             s.send(b)
             bufferSize = pickle.loads(s.recv(1024))
-            response = json.loads(s.recv(bufferSize).decode())
+            response = json.loads(s.recv(bufferSize).decode('utf8'))
             s.close()
         elif buildType == 'deploy':
-            link = url + '/gui/'
+            link = url + '/gui'
             postData = urlencode(data).encode()
             output = urlopen(link, postData)
             response = json.loads(output.read())
+            output.close()
     else:
         response = urlopen(artURL).read()
 
     QApplication.restoreOverrideCursor()
     return response
 
-url = 'http://127.0.0.1:8000'
+url = 'http://127.0.0.1/'
 sessionID = -1
 app = QtGui.QApplication(sys.argv)
 window = mainFrame()

@@ -40,7 +40,7 @@ def extractnews():
 
 
 # K-means clustering algorithm to cluster users
-# @periodic_task(run_every=(crontab(minute="*")))
+@periodic_task(run_every=(crontab(minute="*")))
 def cluster_user():
 
 	# Database models
