@@ -37,7 +37,7 @@ while True:
             else:
                 output = [False]
         elif request["action"] == "retrievePost":
-            posts = [{"title": request["type"] + " " + str(i), "id":i, "url":host, "state": i % 3} for i in range(10)]
+            posts = [{"title": request["type"] + " " + str(i), "id":i, "url":'http://'+host, "state": i % 3} for i in range(10)]
             output = posts
         elif request["action"] == "retrieveContent":
             output = "<h1><p>Content for post " + str(request["id"]) + "</p></h1>"

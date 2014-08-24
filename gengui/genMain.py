@@ -1,9 +1,9 @@
 import sys
 import pickle
 import json
-import webbrowser
 import threading
 import socket
+import webbrowser
 
 from serverConfig import *
 from PyQt4 import QtCore, QtGui, QtWebKit
@@ -13,6 +13,9 @@ from loginFrame import Ui_loginFrameParent
 from mainFrame import Ui_MainWindow
 from urllib.request import urlopen, Request
 from urllib.parse import urlencode
+
+
+buildType = 'deploy'
 
 
 class mainFrame(QtGui.QMainWindow):
@@ -41,7 +44,6 @@ class mainFrame(QtGui.QMainWindow):
         if self.updating is False:
             self.receiveData()
 
-
     def trendingButtonToggled(self):
         if self.ui.trendingButton.isChecked() is not False:
             self.state = "Trending"
@@ -60,7 +62,7 @@ class mainFrame(QtGui.QMainWindow):
         self.close()
         login.show()
         data = {'action': 'logout', 'id': sessionID}
-        sendData(data)
+        temp = communicationProc(data)
 
     def redirectButtonClicked(self):
         link = self.ui.itemList.currentItem().data(QtCore.Qt.UserRole)[1]
@@ -99,10 +101,9 @@ class mainFrame(QtGui.QMainWindow):
 
     def itemListSelectionChanged(self):
 
-        id = self.ui.itemList.currentItem().data(QtCore.Qt.UserRole)[0]
+        artURL = self.ui.itemList.currentItem().data(QtCore.Qt.UserRole)[1]
 
-        data = {'action': 'retrieveContent', 'id': id}
-        response = communicationProc(data)
+        response = communicationProc(url=artURL)
 
         self.ui.webView.setContent(response)
 
@@ -128,7 +129,7 @@ class mainFrame(QtGui.QMainWindow):
 
     def receiveData(self):
         self.updating = True
-        data = {'action': 'retrievePost', 'type': self.state}
+        data = {'action': 'retrievePost', 'type': self.state, 'sessionID': sessionID}
         response = communicationProc(data)
 
         self.populateMainWindow(response)
@@ -177,6 +178,7 @@ class loginFrame(QtGui.QFrame):
         else:
             data = {'action': 'login', 'username': username, 'password': password}
             response = communicationProc(data)
+
             if response[0] is not False:
                 f = open('user.dat', 'wb')
                 pickle.dump(response[1], f)
@@ -195,36 +197,29 @@ def startApp():
     window.show()
 
 
-def sendData(data):
-    # cursor change code
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((host, port))
-    b = json.dumps(data).encode()
-    s.send(b)
-    s.close()
-    # cursor change code
-
-def communicationProc(data):
+def communicationProc(data=None, artURL=None):
     QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect((host, port))
-    b = json.dumps(data).encode()
-    link = url + '/gui'
-    postData = urlencode(data).encode()
-    try:
-        output = urlopen(link, postData)
-        print (output.read())
-    except Exception as e:
-        print(e)
-    s.send(b)
+    if data is not None:
+        if buildType == 'debug':
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((host, port))
+            b = json.dumps(data).encode()
+            s.send(b)
+            bufferSize = pickle.loads(s.recv(1024))
+            response = json.loads(s.recv(bufferSize).decode())
+            s.close()
+        elif buildType == 'deploy':
+            link = url + '/gui/'
+            postData = urlencode(data).encode()
+            output = urlopen(link, postData)
+            response = json.loads(output.read())
+    else:
+        response = urlopen(artURL).read()
 
-    bufferSize = pickle.loads(s.recv(1024))
-    response = json.loads(s.recv(bufferSize).decode())
-    s.close()
     QApplication.restoreOverrideCursor()
     return response
 
-url = 'http://ujwalsubedi.com'
+url = 'http://127.0.0.1:8000'
 sessionID = -1
 app = QtGui.QApplication(sys.argv)
 window = mainFrame()
@@ -239,6 +234,7 @@ if __name__ == '__main__':
         login.show()
     data = {'action': 'checkSession', 'id': sessionID}
     response = communicationProc(data)
+
     if response[0] is not True:
         login.show()
     else:
