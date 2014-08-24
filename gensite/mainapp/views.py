@@ -16,7 +16,7 @@ from random import sample,choice,randint
 import json
 import pytz
 
-from genpy import crawler
+from genpy import crawler,parser
 
 class SignupForm(forms.ModelForm):
 	class Meta:
@@ -208,10 +208,10 @@ def ratepost(request):
 	return HttpResponse('Rating Done')
 
 def clientconnect(request):
-	action=request.GET['action']
+	action=request.POST['action']
 	if (action=='login'):
-		username=request.GET['username']
-		password=request.GET['password']
+		username=request.POST['username']
+		password=request.POST['password']
 		user=authenticate(username=username,password=password)
 		if user is not None:
 			session_id=''
@@ -229,16 +229,49 @@ def clientconnect(request):
 			return HttpResponse(json.dumps([True,session_id]))
 		else:
 			return HttpResponse(json.dumps(False))
+
+	elif(action=='checksession'):
+		session_id=request.POST['session_id']
+		userdata=UserData.objects.filter(session_id=session_id)
+		if (userdata is not None):
+			return HttpResponse(json.dumps([True]))
+		else:
+			return HttpResponse(json.dumps([False]))
+
 	else:
 		session_id=request.POST['session_id']
-		user=User.objects.userdata_set
+		userdata=UserData.objects.filter(session_id=session_id)[0]
 		if (action=='like'):
 			id=request.POST['id']
-			score=request.POST['state']
+			rating_score=request.POST['state']
+			new_rating=Rating(user_id=userdata.user.id,post_id=id,score=rating_score)
+			new_rating.save()
+
+		elif(action=='logout'):
+			userdata.session_id=''
+
+		elif(action=='retrievePost'):
+			post_type=request.POST['type']
+			if(post_type=='Recommended'):
+				total_posts=list(set(
+					Post.objects.filter(rating__user__userdata__cluster_class=userdata.cluster_class,rating__score=2)
+					.exclude(rating__user__id=request.user.id)[:100]))
+			else:
+				total_posts=Post.objects.all().order_by('-created_at')[:300]
+
+			post_list=[]
+			for post in total_posts:
+				post_dict={'title':post.title,'id':post.id,'url':post.url}
+				post_list.append(post_dict)
+
+			return HttpResponse(json.dumps(post_list))
 
 
-
-
+		elif(action=='retreiveContent'):
+			id=request.POST['id']
+			post=Post.objects.get(id=id)
+			post_text=parser.parser(post.url)
+			return HttpResponse(json.dumps(post_text))
 
 
 def test(request):
@@ -257,4 +290,4 @@ def test(request):
 	# 	except:
 	# 		pass
 
-	return HttpResponse('Alldone')
+	return HttpResponse(json.dumps('के छ मुला '))
