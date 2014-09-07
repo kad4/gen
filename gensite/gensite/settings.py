@@ -100,5 +100,9 @@ CELERY_RESULT_BACKEND='djcelery.backends.database:DatabaseBackend'
 CELERY_BEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 
+import sys
+if "celeryd" in sys.argv:
+	DEBUG = False
+
 
 
